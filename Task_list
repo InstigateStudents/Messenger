@@ -8,7 +8,7 @@ Main functionality.
 -Delivery confirmation
 	Confirm message delivery.(seen by other user)
 -History
-	Our history have to hold dialog history(e.g last 30 days messages), the 	time(day,time,month,year) of chatting with each user.
+	Our history have to hold dialog history(e.g last 30 days messages), the time(day,time,month,year) of chatting with each user.
 -Contacts
 	Contacts should hold contacts list of all users with functionality adding,deleting 
 	and hiding them.
