@@ -1,0 +1,17 @@
+General
+- fill README file (add steps how to build/run the app)
+- titles for dialogs/windows
+- icon
+
+GUI
+Login dialog
+- add error messaging for wrong login
+- disable button till username/password are not filled in
+- visual effect on wrong login (vibration)
+
+Register dialog
+- create dialog
+
+Messenger window
+- initial version: fixed size window with table view
+
