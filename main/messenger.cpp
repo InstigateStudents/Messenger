@@ -24,7 +24,7 @@ void messenger::run()
 
 void messenger::login(const QString& u, const QString& p)
 {
-	bool b = true;
+	bool b = false; //true;
 	//b = m_main_client->login(u, p);	
 	std::cout << u.toStdString() << std::endl;
 	std::cout << p.toStdString() << std::endl;
@@ -32,7 +32,7 @@ void messenger::login(const QString& u, const QString& p)
 		m_log_in_window ->hide();	
 		m_messenger_window ->show();	
 	} else {
-		//m_log_in_window->show_login_error();
+		m_log_in_window->show_login_error("Wrong Login");
 	}
 
 }

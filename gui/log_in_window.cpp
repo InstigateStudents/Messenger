@@ -12,7 +12,6 @@
 #include <QErrorMessage>
 
 
-
 log_in_window::log_in_window(QWidget* parent) :QDialog(parent)
 {
 	create_username_layout();
@@ -20,6 +19,8 @@ log_in_window::log_in_window(QWidget* parent) :QDialog(parent)
 	create_passwd_layout();
 
 	create_button_layout();
+	
+	create_error_layout();
 
 	connect_signal_slot();
 
@@ -27,15 +28,26 @@ log_in_window::log_in_window(QWidget* parent) :QDialog(parent)
 	
 }
 
-void log_in_window::checking_login()
+void log_in_window::checking_login_fields(const QString &str)
 {
 	if (uname_line_edit->text().isEmpty() || upasswd_line_edit->text().isEmpty()) {
-		QErrorMessage *error = new QErrorMessage;
-		error->showMessage("User nmae or Password fild \n is empty");
+		
+		login_button -> setEnabled(false);
+		/*QErrorMessage *error = new QErrorMessage;
+		error->showMessage("User nmae or Password fild \n is empty");*/
 	} else {
-		emit login(uname_line_edit->text(), upasswd_line_edit->text());
+		login_button -> setEnabled(true);
+		//emit login(uname_line_edit->text(), upasswd_line_edit->text());
 	}
 }
+
+void log_in_window::checkin_login()
+{
+	
+	emit login(uname_line_edit->text(), upasswd_line_edit->text());
+
+}
+
 
 void log_in_window::create_username_layout()
 {
@@ -59,10 +71,26 @@ void log_in_window::create_passwd_layout()
 	upasswd_layout -> addWidget(upasswd_line_edit);
 }
 
+void log_in_window::create_error_layout()
+{
+	error_layout = new QHBoxLayout;
+	error_label  = new QLabel(/*"Erro"*/);
+	error_layout -> addWidget(error_label);
+	
+}
+
+void log_in_window::show_login_error(const QString &str)
+{
+	error_label -> setAlignment(Qt::AlignRight);
+	error_label -> setText(str);
+	move(100,100);	
+}
+
 void log_in_window::create_button_layout()
 {
 	reg_button = new QPushButton("Registration");
 	login_button = new QPushButton("LogIn");
+	login_button -> setEnabled(false);
 
 	butt_layout = new QHBoxLayout;
 	butt_layout -> addWidget(reg_button);
@@ -74,6 +102,7 @@ void log_in_window::create_main_layout()
 	QVBoxLayout* reg_layout = new QVBoxLayout;
 	reg_layout -> addLayout(uname_layout);
 	reg_layout -> addLayout(upasswd_layout);
+	reg_layout -> addLayout(error_layout);
 	reg_layout -> addLayout(butt_layout);
 
 	setLayout(reg_layout);
@@ -84,9 +113,13 @@ void log_in_window::create_main_layout()
 
 void log_in_window::connect_signal_slot()
 {
-    //connecion
-    QObject::connect(login_button, SIGNAL(clicked()),
-                    this, SLOT(checking_login()));
+	//connecion
+	QObject::connect(uname_line_edit,SIGNAL(textChanged(const QString&)),
+			this, SLOT(checking_login_fields(const QString&)));
+	QObject::connect(upasswd_line_edit,SIGNAL(textChanged(const QString&)),
+			this, SLOT(checking_login_fields(const QString&)));
+	QObject::connect(login_button, SIGNAL(clicked()),
+			this, SLOT(checkin_login()));
 
 
 }

@@ -16,9 +16,11 @@ class log_in_window : public QDialog
         Q_OBJECT
 public:
         log_in_window(QWidget* parent = 0);
+	void show_login_error(const QString&);
 
 private slots:
-        void checking_login();
+        void checking_login_fields(const QString&);
+	void checkin_login();
 signals:
 	void login(const QString&, const QString&);
 
@@ -41,8 +43,11 @@ private:
         void connect_signal_slot();
         void create_username_layout();
         void create_passwd_layout();
+	void create_error_layout();
         void create_button_layout();
         void create_main_layout();
+	
+	//void show_login_error(const QString&);
 };
 
 #endif // LOG_IN_WINDOW_H
