@@ -31,6 +31,9 @@ private:
         QLabel *upasswd_label;
         QLineEdit *upasswd_line_edit;
 
+	QHBoxLayout *error_layout;
+	QLabel *error_label;
+
         QHBoxLayout *butt_layout;
         QPushButton *reg_button;
         QPushButton *login_button;

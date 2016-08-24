@@ -60,7 +60,7 @@ private:
     int current_user;
 
     QListWidget *online_users;
-    QListWidgetItem *list_widget_item;
+    QListWidgetItem *list_widget_item
 private slots:
     void set_current_user(int);
 
