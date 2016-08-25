@@ -2,6 +2,7 @@
 #include "messenger_window.h"
 #include "log_in_window.h"
 //#include "main_client.h"
+#include "dispatcher.hpp"
 
 #include <cassert>
 #include <iostream>
@@ -10,8 +11,9 @@ messenger::messenger(const std::string&)
 {
 	m_log_in_window = new log_in_window();
 	//m_main_client = new m_main_client(ip);
-	connect(m_log_in_window, SIGNAL(login(const QString&,const QString&)), 
-					this, SLOT(login(const QString&,const QString&)));
+
+	m_dispatcher = new Dispatcher();
+	connect_signal_slot();
 
 }
 
@@ -24,9 +26,10 @@ void messenger::run()
 QStringList messenger::fake_list_generator()
 {
 	QStringList l;
-	l << "User1" << "User2" << "User3"<< "User4";
+	l << "Artur" << "Gevorg" << "Argisht" << "Gev";
 	return l;
 }
+
 void messenger::login(const QString& u, const QString& p)
 {
 	bool b = true;
@@ -36,12 +39,32 @@ void messenger::login(const QString& u, const QString& p)
 	if (b) {
 		m_log_in_window ->hide();	
 		//l = m_main_client->get_contacts_list();	
-	//	QList =
+		
 		QStringList l = fake_list_generator(); 
 		m_messenger_window = new messenger_window(l);
+		connect(m_messenger_window, 
+			SIGNAL(send_message_to_client(const QString&, const QString&)),
+			this, SLOT(send_to_client(const QString&, const QString&)));
 		m_messenger_window ->show();	
 	} else {
-		m_log_in_window->show_login_error("Wrong Login");
+		m_log_in_window->show_login_error("Incorrect username/password.");
 	}
+
+}
+
+
+void messenger::send_to_client(const QString& to, const QString& msg)
+{
+    std::cout<<"working send_to_client slot: "<<to.toStdString ()<<msg.toStdString() <<"\n";    
+	m_dispatcher -> send_to(to.toStdString (), msg.toStdString ());
+}
+
+void messenger::connect_signal_slot()
+{
+	connect(m_log_in_window, SIGNAL(login(const QString&,const QString&)),
+                                        this, SLOT(login(const QString&,const QString&)));
+	
+	//connect(m_messenger_window, SIGNAL(send_message_to_client(const QString&, const QString&)),
+	//				this, SLOT(send_to_client(const QString&, const QString&)));
 
 }
