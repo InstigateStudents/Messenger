@@ -11,6 +11,8 @@
 
 #include <QErrorMessage>
 
+#include <unistd.h>
+
 
 log_in_window::log_in_window(QWidget* parent) :QDialog(parent)
 {
@@ -83,7 +85,19 @@ void log_in_window::show_login_error(const QString &str)
 {
 	error_label -> setAlignment(Qt::AlignRight);
 	error_label -> setText(str);
-	move(100,100);	
+
+	QRect r = geometry();
+	int x = r.x();
+	int y = r.y();
+
+	for (int i = 0; i < 100; ++i) {
+		this -> move(r.x()+20, r.y());
+		sleep(1);
+		this -> move(x, y);
+		this -> move(r.x()-20, r.y());
+	}
+	this -> move(x,y);
+
 }
 
 void log_in_window::create_button_layout()
