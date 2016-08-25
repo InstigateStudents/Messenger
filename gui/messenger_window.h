@@ -2,6 +2,7 @@
 #define MESSENGER_WINDOW_H
 
 #include <QDialog>
+#include <QStringList>
 
 class QHBoxLayout;
 class QVBoxLayout;
@@ -15,54 +16,54 @@ class QStackedLayout;
 
 class messenger_window : public QDialog
 {
-    Q_OBJECT
+	Q_OBJECT
 public:
-    messenger_window(QWidget* parent = 0);
+	messenger_window(const QStringList& /*QWidget* parent = 0*/);
 
 private slots:
-    void send_message();
+	void send_message();
+	void receive_messege(int/*const QString& from*/, const QString& msg);
 
 private:
+	QHBoxLayout *m_main_layout;
 
-    QHBoxLayout *main_layout;
+	QWidget *m_left_widget;
+	QHBoxLayout *m_left_layout;
+	QVBoxLayout *m_left_left_layout;
+	QLabel *m_current_user_name;
+	QStackedLayout *m_message_board;
+	QTextEdit *m_user_text_edit;
 
-    QWidget *left_widget;
-    QHBoxLayout *left_layout;
-    QVBoxLayout *left_left_layout;
-    QStackedLayout *message_board;
-    QTextEdit *vector;
+	QVBoxLayout *m_left_right_layout;
 
-    QVBoxLayout *left_right_layout;
+	QWidget *m_right_widget;
+	QVBoxLayout *m_right_layout;
 
-    QWidget *right_widget;
-    QVBoxLayout *right_layout;
-
-    QTextEdit *message_text;
-    QPushButton *send_button;
+	QTextEdit *m_message_text;
+	QPushButton *m_send_button;
 
 
-    void create_main_layout();
+	void create_main_layout();
 
-    void create_left_left_layout();
-    void create_left_right_layout();
+	void create_left_left_layout();
+	void create_left_right_layout();
 
-    void create_left_side();
+	void create_left_side();
 
-    void create_right_side();
+	void create_right_side();
 
-    void connect_signal_slot();
+	void connect_signal_slot();
 
-    //
-    int user_count;
-    QString *user_name;
-    
+	//
+	int m_user_count;
+	int m_current_user;
+	QStringList m_user_name;
 
-    int current_user;
 
-    QListWidget *online_users;
-    QListWidgetItem *list_widget_item;
+	QListWidget *m_online_users;
+	QListWidgetItem *m_list_widget_item;
 private slots:
-    void set_current_user(int);
+	void set_current_user(int = 0);
 
 
 };

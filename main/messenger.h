@@ -2,6 +2,7 @@
 #define MESSENGER_H
 #include <string>
 #include <QObject>
+#include <QStringList>
 
 
 class log_in_window;
@@ -16,6 +17,7 @@ private:
 	log_in_window * m_log_in_window;
 	messenger_window * m_messenger_window;
 	main_client *m_main_client;
+	QStringList fake_list_generator();
 
 public:
 	messenger(const std::string& ip);

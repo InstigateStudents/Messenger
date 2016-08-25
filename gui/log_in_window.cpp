@@ -33,21 +33,15 @@ log_in_window::log_in_window(QWidget* parent) :QDialog(parent)
 void log_in_window::checking_login_fields(const QString &str)
 {
 	if (uname_line_edit->text().isEmpty() || upasswd_line_edit->text().isEmpty()) {
-		
 		login_button -> setEnabled(false);
-		/*QErrorMessage *error = new QErrorMessage;
-		error->showMessage("User nmae or Password fild \n is empty");*/
 	} else {
 		login_button -> setEnabled(true);
-		//emit login(uname_line_edit->text(), upasswd_line_edit->text());
 	}
 }
 
 void log_in_window::checkin_login()
 {
-	
 	emit login(uname_line_edit->text(), upasswd_line_edit->text());
-
 }
 
 
@@ -78,7 +72,6 @@ void log_in_window::create_error_layout()
 	error_layout = new QHBoxLayout;
 	error_label  = new QLabel(/*"Erro"*/);
 	error_layout -> addWidget(error_label);
-	
 }
 
 void log_in_window::show_login_error(const QString &str)
@@ -90,14 +83,13 @@ void log_in_window::show_login_error(const QString &str)
 	int x = r.x();
 	int y = r.y();
 
-	for (int i = 0; i < 100; ++i) {
+	for (int i = 0; i < 70; ++i) {
 		this -> move(r.x()+20, r.y());
-		sleep(1);
+		sleep(0.8);
 		this -> move(x, y);
 		this -> move(r.x()-20, r.y());
 	}
 	this -> move(x,y);
-
 }
 
 void log_in_window::create_button_layout()
