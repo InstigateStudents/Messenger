@@ -22,10 +22,10 @@ static std::string get_username_by_ip(std::string ip) {
     int i,pos;
     std::string u_name;
     FILE* fd = fopen("./core/files/ipuser","r");
-    if(fd == NULL) {
+    if (fd == NULL) {
         std::cerr << "File is not opened";
     }
-    while(fgets(buf, 256, fd)) {
+    while (fgets(buf, 256, fd)) {
         line = std::string(buf);
         pos = line.find(ip);
         if(pos != std::string::npos) {
