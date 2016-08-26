@@ -16,6 +16,7 @@ struct User {
     }
 };
 
+/*
 static std::string get_username_by_ip(std::string ip) {
     char buf[256];
     std::string line;
@@ -35,6 +36,7 @@ static std::string get_username_by_ip(std::string ip) {
     }
     return NULL; 
 }
+*/
 
 static std::string get_ip_by_username(std::string u_name) {
     char buf[256];
