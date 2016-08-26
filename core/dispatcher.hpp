@@ -24,11 +24,13 @@ public:
     // check if we have connection with signed user
     void clear_clients_list();
     // slot registration 
-    void registration(std::string u_name, std::string u_pass);
+    bool registration(std::string u_name, std::string u_pass);
     // slot login
-    void login(std::string u_name, std::string u_pass);
+    bool login(std::string u_name, std::string u_pass);
     // slot logout
     void logout();
+    // gives list of online users
+    std::vector<std::string> get_onlines();
     ~Dispatcher();
 };
 

@@ -26,7 +26,6 @@ void messenger::run()
 QStringList messenger::fake_list_generator()
 {
 	QStringList l;
-	l << "Artur" << "Gevorg" << "Argisht" << "Gev";
 	return l;
 }
 
