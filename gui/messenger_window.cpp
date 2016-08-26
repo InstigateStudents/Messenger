@@ -135,30 +135,24 @@ void messenger_window::send_message()
 	if ( !(m_message_text -> toPlainText().isEmpty()) /*!msg.isEmpty() */ ) {
 
 		QString msg = ">>>>\n"+m_message_text -> toPlainText()+"\n";
-		//m_user_text_edit[m_current_user].setAlignment(Qt::AlignRight);
 		m_user_text_edit[m_current_user].setTextColor(QColor(0,0,0));
 		m_user_text_edit[m_current_user].append(msg);
+		//emit
+		emit send_message_to_client(m_user_name[m_current_user], m_message_text -> toPlainText());
 		m_message_text -> clear();
-		receive_messege(m_current_user,"Hello!!");
+		//receive_messege(m_current_user,"Hello!!");
 	}
 }
 
-void messenger_window::receive_messege(/*const QString& from*/int i, const QString& msg)
+void messenger_window::receive_messege(const QString& from, const QString& msg)
 {
-	
-		m_user_text_edit[m_current_user].setAlignment(Qt::AlignLeft);
-		m_user_text_edit[m_current_user].setTextColor(QColor(255,0,0));
-	m_user_text_edit[m_current_user].append("<<<<\n"+msg+"\n");
+		int index = m_user_name.indexOf(from);
+		
+		
+		//m_user_text_edit[m_current_user].setAlignment(Qt::AlignLeft);
+		//m_user_text_edit[m_current_user].setTextColor(QColor(255,0,0));
+	m_user_text_edit[index].append("<<<<\n"+msg+"\n");
 
-	/*int index = -1;
-	for ( int i = 0; i < m_user_count; ++i) {
-		if (m_user_name[i] == from) {
-			index = i;
-			break;
-		}
-	}*/
-	//todo
-	//m_user_text_edit[m_user_name];
  	
 }
 

@@ -19,10 +19,12 @@ class messenger_window : public QDialog
 	Q_OBJECT
 public:
 	messenger_window(const QStringList& /*QWidget* parent = 0*/);
+signals:
+	void send_message_to_client(const QString&, const QString&);
 
 private slots:
 	void send_message();
-	void receive_messege(int/*const QString& from*/, const QString& msg);
+	void receive_messege(const QString& from, const QString& msg);
 
 private:
 	QHBoxLayout *m_main_layout;
