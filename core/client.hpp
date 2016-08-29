@@ -7,15 +7,17 @@
 #include <netinet/in.h>
 #include <string.h>
 #include <unistd.h>
+#include <exception>
 
-class Client {
+class client
+{
     private:
-        User pair;
-        static void start_communication(User p);
+        user pair;
+        static void start_communication(user& p);
     public:
-        Client(std::string u_name);
-        User get_pair();
-        void send_message(std::string message);
+        client(const std::string& u_name);
+        user get_pair();
+        void send_message(const std::string& message);
 };
 
 

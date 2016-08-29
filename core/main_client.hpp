@@ -8,29 +8,30 @@
 #include <unistd.h>
 #include <string.h>
 #include <arpa/inet.h>
+#include <exception>
 
 
-class Main_Client {
+class main_client
+{
     private :
         //socket for connection with main server
-        int main_socket;
-        User me;
+        int m_main_socket;
+        user m_me;
         //connect with main server
-        static void connect_server(int main_socket,std::string serv_ip);
+        static void connect_server(int& m_main_socket,const std::string& serv_ip);
     public:
         //default constructor for starting
-        Main_Client(std::string serv_ip);
+        main_client(const std::string& serv_ip);
         //user registration
-        bool registration(std::string u_name, std::string u_password);
+        bool registration(const std::string& u_name,const std::string& u_password);
         //login through username and password   
-        bool login(std::string u_name, std::string u_password);
+        bool login(const std::string& u_name,const std::string& u_password);
         //takes list of online users from main server 
         void give_online_list();        
         //takes list of registered users
         void give_registered_list();
         //logout by user profile
         bool logout();
-
 };
 
 #endif //_MAIN_CLIENT_HPP_

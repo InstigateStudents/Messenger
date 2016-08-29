@@ -1,43 +1,50 @@
 #include "main_client.hpp"
 
-Main_Client::Main_Client(std::string serv_ip) {
-    main_socket= socket(AF_INET, SOCK_STREAM, 0); 
-    me.current_socket =main_socket;
-    me.current_ip = std::to_string(INADDR_ANY);
-    if(me.current_socket < 0) {
+main_client::main_client(const std::string& s_i)
+{
+    m_main_socket= socket(AF_INET, SOCK_STREAM, 0); 
+    m_me.current_socket = m_main_socket;
+    m_me.current_ip = std::to_string(INADDR_ANY);
+    if (m_me.current_socket < 0) {
         std::cerr << "Error in creating socket" << std::endl;
-        //exception
+        throw std::runtime_error("Error in creating socket");
     }
-    std::thread(connect_server, me.current_socket, serv_ip).join();
+    std::thread(connect_server, m_me.current_socket, s_i).join();
 }
 
-void Main_Client::connect_server(int socket, std::string serv_ip) {
+void main_client::connect_server(int& socket,const std::string& serv_ip)
+{
     sockaddr_in serv_addr;
     char buf[256];
     bzero((sockaddr*)&serv_addr, sizeof(serv_addr));
     serv_addr.sin_family = AF_INET;
     serv_addr.sin_port = htons(12345);
     strcpy(buf, serv_ip.c_str());
-    serv_addr.sin_addr.s_addr = inet_addr(buf);//16777343 must be changed to real address
-    if(connect(socket, (sockaddr *)&serv_addr, sizeof(serv_addr)) < 0) {
+    serv_addr.sin_addr.s_addr = inet_addr(buf);
+    if (connect(socket, (sockaddr *)&serv_addr, sizeof(serv_addr)) < 0) {
         std::cerr << "Error in connection" << std::endl;
         //exception
     }
 }
 
 
-bool Main_Client::registration(std::string u_name, std::string u_password) {
+bool main_client::registration(const std::string& u_n,const std::string& u_p)
+{
     std::cout << "in reg" << std::endl;
     char buf[256];
     bzero(buf,sizeof(buf));
     std::string buffer;
-    buffer = std::string("registration?") + u_name + std::string(";") + u_password;
+    buffer = std::string("registration?") + u_n + std::string(";") + u_p;
     strcpy(buf,buffer.c_str());
     // TODO handle write error case
-    write(main_socket, buf, strlen(buf));
-    bzero(buf,sizeof(buf));
- //   read(main_socket, buf, 256);
-    if(buf == "YES") {
+    if (write(m_main_socket, buf, strlen(buf)) < 0) {
+        throw std::runtime_error("Error in registration");
+    }
+    else {
+        bzero(buf,sizeof(buf));
+    }
+//   read(main_socket, buf, 256);
+    if (buf == "YES") {
         return true;
     }
     else {
@@ -46,68 +53,95 @@ bool Main_Client::registration(std::string u_name, std::string u_password) {
 }
 
 
-bool Main_Client::login(std::string u_name, std::string u_password) {
+bool main_client::login(const std::string& u_n,const std::string& u_p)
+{
     std::cout << "in main_client Login" << std::endl;
-    me.username = u_name;
+    m_me.username = u_n;
     std::cout << "in login" << std::endl;
     char buf[256];
     bzero(buf,sizeof(buf));
     std::string buffer;
-    buffer = std::string("login?") + u_name + std::string(";") + u_password;
+    buffer = std::string("login?") + u_n + std::string(";") + u_p;
     strcpy(buf,buffer.c_str());
     // TODO handle write error case
-    write(main_socket, buf, strlen(buf));
+    if (write(m_main_socket, buf, strlen(buf)) < 0) {
+    //exception
+ //       throw std::runtime_error("Error in login");
+    }
+    else {
    // read(main_socket, buf, 256);
-    if(buf == "YES") {
+    if (buf == "YES") {
         return true;
     }
     else {
         return false;
     }   
+    }
 }
 
-bool Main_Client::logout() {
+bool main_client::logout()
+{
     char buf[256];
-    std::string buffer = std::string("logout?") + me.username;
+    std::string buffer = std::string("logout?") + m_me.username;
     strcpy(buf, buffer.c_str());
     // TODO handle write error case
-    write(main_socket, buf, strlen(buf));
-  //  read(main_socket, buf, 256);
-    if(buf == "YES") {
-        return true;
+    if (write(m_main_socket, buf, strlen(buf)) < 0) {
+        throw std::runtime_error("Error in logout");
     }
     else {
-        return false;
-    }   
+  //        read(main_socket, buf, 256);
+            if (buf == "YES") {
+                return true;
+            }
+            else {
+                    return false;
+                 }   
+    }
 }
 
 
-void Main_Client::give_online_list() {
-    FILE* fd = fopen("./files/ipuser", "w");
-    while(true) {
+void main_client::give_online_list() 
+{
+    FILE* fd = fopen("./core/files/ipuser", "w");
+    if (fd == NULL) {
+        throw std::runtime_error("Error in open file");
+    }
+    while (true) {
         char buf[4096];
         bzero(buf,sizeof(buf));
         // TODO handle read error case
-        read(main_socket, buf, 4096);
-        fwrite(buf, sizeof(char), sizeof(buf), fd);
+        if (read(m_main_socket, buf, 4096) < 0)
+        {
+            throw std::runtime_error("Error in reading from give_online_list");
+            //exception
+        }
+        else {
+            fwrite(buf, sizeof(char), sizeof(buf), fd);
+        }
     }
     fclose(fd);
 }
 
 
-void Main_Client::give_registered_list() {
+void main_client::give_registered_list()
+{
     FILE* fd = fopen("./files/regs", "w");
-        char buf[4096];
-        bzero(buf,sizeof(buf));
-        // TODO handle read error case
-        read(main_socket, buf, 4096);
-        fwrite(buf, sizeof(char), sizeof(buf), fd);
+    if ( fd == NULL) {
+        throw std::runtime_error("Error in open file");
+    }
+    char buf[4096];
+    bzero(buf,sizeof(buf));
+    // TODO handle read error case
+    if (read(m_main_socket, buf, 4096) < 0) {
+        throw std::runtime_error("Error in reading from give_registered_list");
+    }
+    fwrite(buf, sizeof(char), sizeof(buf), fd);
     fclose(fd);
 }
 
 /*
 int main() {
-    Main_Client c("192.168.68.111");
+    main_client c("192.168.68.111");
     c.registration("Artur","Grigoryan");
     c.login("Artur","Grigoryan");
     c.logout();

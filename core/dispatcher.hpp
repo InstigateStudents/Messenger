@@ -7,6 +7,7 @@
 #include "user.hpp"
 #include <vector>
 #include <string>
+#include <assert.h>
 #include <QObject>
 
 
@@ -15,16 +16,16 @@ class dispatcher : public QObject
 	Q_OBJECT
 
 private:
-    typedef std::vector<Client> clients;
+    typedef std::vector<client> clients;
     typedef std::vector<std::string> users;
 
 private:
     // list of users
-    clients clients_list;
+    clients m_clients_list;
     // pointer to main client object
-    Main_Client* m_client;
+    main_client* m_client;
     // pointer to server object 
-    Server* serv;
+    server* serv;
 
     // @name slots for signals
 signals:
@@ -36,9 +37,9 @@ public:
     // check if we have connection with signed user
     void clear_clients_list();
     // registration function takes arguments username and password
-    bool registration(std::string u_name, std::string u_pass);
+    bool registration(const std::string& u_name,const std::string& u_pass);
     // function login takes arguments username and password
-    bool login(std::string u_name, std::string u_pass);
+    bool login(const std::string& u_name, const std::string& u_pass);
     // function logout
     void logout();
     // gives list of online users
@@ -47,7 +48,7 @@ public:
     users get_registered_users();
 public:
     // constructor takes in argument ip of main_server,and starting main_client
-    dispatcher(std::string m_server_ip);
+    dispatcher(const std::string& m_server_ip);
     //destructor
     ~dispatcher();
 };

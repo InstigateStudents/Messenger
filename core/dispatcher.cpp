@@ -1,48 +1,48 @@
 #include "dispatcher.hpp"
 
-dispatcher::dispatcher(std::string i)
-{
+dispatcher::dispatcher(const std::string& i)
+{   
     m_client = NULL;
     serv = NULL;
-    m_client = new Main_Client(i);
+    m_client = new main_client(i);
 }
 
-void dispatcher::send_to(const std::string& u_name, const std::string& message)
+void dispatcher::send_to(const std::string& u_n, const std::string& m)
 {
     clear_clients_list();
-    for (clients::iterator i = clients_list.begin(); i != clients_list.end(); ++i) {
-        if (i->get_pair().username == u_name) {
-            i->send_message(message);
+    for (clients::iterator i = m_clients_list.begin(); i != m_clients_list.end(); ++i) {
+        if (i->get_pair().username == u_n) {
+            i->send_message(m);
             std::cout << "after sending"  <<std::endl;
             return;
         }
     }
-    clients_list.push_back(Client(u_name));
-    (clients_list.end() - 1)->send_message(message);
-    std::cout << "after sending" <<std::endl;
+    m_clients_list.push_back(client(u_n));
+    (m_clients_list.end() - 1)->send_message(m);
+    std::cout << "after sending" << std::endl;
 }
 
 void dispatcher::clear_clients_list()
 {
-      for (std::vector<Client>::iterator i = clients_list.begin(); i != clients_list.end(); i++) {
+      for (std::vector<client>::iterator i = m_clients_list.begin(); i != m_clients_list.end(); i++) {
         if (i->get_pair().current_socket == -1) {
             std::cout << "\n deleted user" << i->get_pair().username <<std::endl;
-            clients_list.erase(i);
+            m_clients_list.erase(i);
         }
     }
 }
 
-bool dispatcher::registration(std::string u_name, std::string u_pass)
+bool dispatcher::registration(const std::string& u_n,const std::string& u_p)
 {
-    return m_client->registration(u_name, u_pass);
+    return m_client->registration(u_n, u_p);
 }
 
-bool dispatcher::login(std::string u_name, std::string u_pass)
+bool dispatcher::login(const std::string& u_n, const std::string& u_p)
 {
     // making the condition true as the main server isn't working yet
-    if ( m_client->login(u_name, u_pass) || true) { // || true need to delete
+    if ( m_client->login(u_n, u_p) || true) { // || true need to delete
         std::cout << "in dispatcher Login" << std::endl;
-        serv = new Server;
+        serv = new server;
 	    connect(serv,SIGNAL(receive_message(const QString&, const QString&)),
             this, SIGNAL(new_message(const QString&, const QString&)),
 	    Qt::QueuedConnection);	
@@ -56,7 +56,7 @@ void dispatcher::logout()
     m_client->logout();
     delete serv;
     serv = NULL;
-    clients_list.clear();
+    m_clients_list.clear();
 }
 
 dispatcher::~dispatcher()
