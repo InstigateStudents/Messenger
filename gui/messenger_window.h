@@ -27,7 +27,7 @@ signals:
 
 private slots:
 	void send_message();
-
+	void set_color_black(int);
 private:
 	QHBoxLayout *m_main_layout;
 

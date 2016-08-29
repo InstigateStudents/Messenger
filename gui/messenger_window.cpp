@@ -41,11 +41,8 @@ messenger_window::messenger_window(const QStringList& l) :QDialog()
 void messenger_window::create_main_layout()
 {
 	m_main_layout = new QHBoxLayout;
-	//m_main_layout -> addStretch();
 	m_main_layout -> addWidget(m_left_widget);
-	//m_main_layout -> addStretch(); 
 	m_main_layout -> addWidget(m_right_widget);
-
 }
 
 void messenger_window::create_left_left_layout()
@@ -61,9 +58,6 @@ void messenger_window::create_left_left_layout()
 	m_user_text_edit = new QTextEdit[m_user_count];
 	for (int i = 0; i < m_user_count; ++i) {
 		m_message_board -> addWidget(m_user_text_edit+i);
-		//m_user_name[i].append("User ");
-		//m_user_name[i].append(QString::number(i));
-
 		m_user_text_edit[i].append(m_user_name[i]);
 		m_user_text_edit[i].setReadOnly(true);
 	}
@@ -116,9 +110,6 @@ void messenger_window::create_right_side()
 
 	for(int i = 0; i < m_user_count; ++i){
 		QIcon icon("/home/student/Desktop/Messenger/gui/user.png");
-		//QString m_user_name;
-		//m_user_name.append("User ");
-		//m_user_name.append(QString::number(i));
 
 		m_list_widget_item[i].setIcon(icon);
 		m_list_widget_item[i].setText(m_user_name[i]);
@@ -134,26 +125,26 @@ void messenger_window::create_right_side()
 void messenger_window::send_message()
 {
 
-	if ( !(m_message_text -> toPlainText().isEmpty()) /*!msg.isEmpty() */ ) {
-
+	if ( !(m_message_text -> toPlainText().isEmpty()) ) {
 		QString msg = ">>>>\n"+m_message_text -> toPlainText()+"\n";
 		m_user_text_edit[m_current_user].setTextColor(QColor(0,0,0));
 		m_user_text_edit[m_current_user].append(msg);
 		//emit
 		QString to(m_user_name[m_current_user]);
 		QString m(m_message_text -> toPlainText());
-		emit send_message_to_client(to, m/*m_user_name[m_current_user], m_message_text -> toPlainText()*/);
+		emit send_message_to_client(to, m);
 		m_message_text -> clear();
 	}
 }
 
 void messenger_window::receive_message(const QString& from, const QString& msg)
 {
-	//std::cout<<"gui/messenger_window.cpp:\treceive_message\n";
-	//std::cout<<"))))))))))"<<from.toStdString()<<"    "<<msg.toStdString()<<std::endl;
 	int index = m_user_name.indexOf(from);
-	
+	m_user_text_edit[index].setTextColor(QColor(139,0,0));
 	m_user_text_edit[index].append("<<<<\n"+msg+"\n");
+	if (m_current_user != index) {
+		m_list_widget_item[index].setTextColor(QColor(255,0,0));
+	}
 }
 
 void messenger_window::refresh_show_online_users(QVector<QString> online)
@@ -176,8 +167,12 @@ void messenger_window::connect_signal_slot()
 {
 	QObject::connect(m_send_button,SIGNAL(clicked()),this,SLOT(send_message()));
 
-	QObject::connect(m_online_users,SIGNAL(currentRowChanged(int)),this,SLOT(set_current_user(int)));
-	QObject::connect(m_online_users,SIGNAL(currentRowChanged(int)),m_message_board,SLOT(setCurrentIndex(int)));
+	QObject::connect(m_online_users,SIGNAL(currentRowChanged(int)),
+					this,SLOT(set_current_user(int)));
+	QObject::connect(m_online_users,SIGNAL(currentRowChanged(int)),
+					m_message_board,SLOT(setCurrentIndex(int)));
+	QObject::connect(m_online_users,SIGNAL(currentRowChanged(int)),
+					this,SLOT(set_color_black(int)));
 
 }
 
@@ -190,4 +185,9 @@ void messenger_window::set_current_user(int i)
 	tmp.append(m_user_name[i]);
 	tmp.append("</font></h2>");
 	m_current_user_name -> setText(tmp);
+}
+
+void messenger_window::set_color_black(int i)
+{
+	m_list_widget_item[i].setTextColor(QColor(0,0,0));
 }
