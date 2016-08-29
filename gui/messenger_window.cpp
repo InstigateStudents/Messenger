@@ -36,6 +36,8 @@ messenger_window::messenger_window(const QStringList& l) :QDialog()
 	setLayout(m_main_layout);
 }
 
+
+
 void messenger_window::create_main_layout()
 {
 	m_main_layout = new QHBoxLayout;
@@ -138,23 +140,37 @@ void messenger_window::send_message()
 		m_user_text_edit[m_current_user].setTextColor(QColor(0,0,0));
 		m_user_text_edit[m_current_user].append(msg);
 		//emit
-		emit send_message_to_client(m_user_name[m_current_user], m_message_text -> toPlainText());
+		QString to(m_user_name[m_current_user]);
+		QString m(m_message_text -> toPlainText());
+		emit send_message_to_client(to, m/*m_user_name[m_current_user], m_message_text -> toPlainText()*/);
 		m_message_text -> clear();
-		//receive_messege(m_current_user,"Hello!!");
 	}
 }
 
-void messenger_window::receive_messege(const QString& from, const QString& msg)
+void messenger_window::receive_message(const QString& from, const QString& msg)
 {
-		int index = m_user_name.indexOf(from);
-		
-		
-		//m_user_text_edit[m_current_user].setAlignment(Qt::AlignLeft);
-		//m_user_text_edit[m_current_user].setTextColor(QColor(255,0,0));
+	//std::cout<<"gui/messenger_window.cpp:\treceive_message\n";
+	//std::cout<<"))))))))))"<<from.toStdString()<<"    "<<msg.toStdString()<<std::endl;
+	int index = m_user_name.indexOf(from);
+	
 	m_user_text_edit[index].append("<<<<\n"+msg+"\n");
-
- 	
 }
+
+void messenger_window::refresh_show_online_users(QVector<QString> online)
+{
+	for (int i = 0; i < m_user_count; ++i) {
+		m_list_widget_item[i].setHidden(true);
+	}
+	
+	for (int i = 0; i < m_user_count; ++i) {
+		int index = m_user_name.indexOf(online[i]);
+		m_list_widget_item[index].setHidden(false);
+	}
+
+}
+
+
+
 
 void messenger_window::connect_signal_slot()
 {

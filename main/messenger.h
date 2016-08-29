@@ -3,6 +3,7 @@
 #include <string>
 #include <QObject>
 #include <QStringList>
+#include <vector>
 
 
 class log_in_window;
@@ -24,10 +25,11 @@ private:
 public:
 	messenger(const std::string& ip);
 	void run();
-	void connect_signal_slot();
 public slots:
 	void login(const QString&, const QString&);
 	void send_to_client(const QString&, const QString&);
+	void receive_message(const QString&, const QString&);
+	void refresh_online_users(std::vector<std::string>);
 };
 
 #endif // MESSENGER_H

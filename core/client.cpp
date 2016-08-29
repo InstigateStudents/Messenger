@@ -12,7 +12,6 @@ Client::Client(std::string u_name) {
 
 void Client::start_communication(User p) {
     sockaddr_in pair_addr; 
-    char buf[1024];
     bzero((sockaddr*)&pair_addr, sizeof(pair_addr));
     pair_addr.sin_family = AF_INET;
     pair_addr.sin_port = htons(12345);
@@ -28,9 +27,9 @@ void Client::start_communication(User p) {
 void Client::send_message(std::string message) {
     char buf[1024];
     strcpy(buf,  message.c_str());
-    printf(buf,1024);
         if(write(pair.current_socket, buf, strlen(buf)) < 0 ) {
             std::cerr << "Error in writing" << std::endl;
+            pair.current_socket = -1;
         }
 }
 
@@ -38,6 +37,8 @@ void Client::send_message(std::string message) {
 User Client::get_pair() {
     return pair;
 }
+
+
 /* 
 int main() {
     Client a("Gevorg");

@@ -26,6 +26,8 @@ class Main_Client {
         bool login(std::string u_name, std::string u_password);
         //takes list of online users from main server 
         void give_online_list();        
+        //takes list of registered users
+        void give_registered_list();
         //logout by user profile
         bool logout();
 

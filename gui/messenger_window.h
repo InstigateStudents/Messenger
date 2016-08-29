@@ -18,13 +18,15 @@ class messenger_window : public QDialog
 {
 	Q_OBJECT
 public:
-	messenger_window(const QStringList& /*QWidget* parent = 0*/);
+	messenger_window(const QStringList&);
+	void receive_message(const QString&, const QString&);
+	void refresh_show_online_users(QVector<QString>);
+
 signals:
 	void send_message_to_client(const QString&, const QString&);
 
 private slots:
 	void send_message();
-	void receive_messege(const QString& from, const QString& msg);
 
 private:
 	QHBoxLayout *m_main_layout;
@@ -55,6 +57,7 @@ private:
 	void create_right_side();
 
 	void connect_signal_slot();
+
 
 	//
 	int m_user_count;

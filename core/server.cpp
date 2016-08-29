@@ -6,10 +6,10 @@
 #include <string.h>
 
 Server::Server() {
-    std::thread(start_server).detach();
+    std::thread(start_server, this).detach();
 }
 
-void Server::start_server() {
+void Server::start_server(Server* s) {
     int m_read_socket;
     int newsocket;
     User current_user;
@@ -40,20 +40,26 @@ void Server::start_server() {
         current_user.username = get_username_by_ip(u_ip); 
         current_user.current_ip =u_ip;
         current_user.current_socket = newsocket;
-        std::thread(read_message, current_user).detach();
+        std::thread(read_message, s, current_user).detach();
     }
 }
 
-void Server::read_message(User u) {
+void Server::read_message(Server* s, User u) {
     char buf[1024];
+    std::string buffer;
     while(true) {
         bzero(buf,1024);
         if(read(u.current_socket, buf, 1024) > 0) {
-            std::cout << "Message from " << u.username << std::string(buf) << std::flush;
+    		buffer = std::string(buf);
+		
+	    	QString to = QString::fromStdString(u.username);
+	    	QString m  = QString::fromStdString(buffer);	
+	
+            emit s->receive_message(to, m);
+		//std::cout << "Message from " << u.username << buffer << std::flush;
         }
         else {
             u.current_socket = -1;
-            std::cout << u.current_socket << std::endl;
             return;
         }
     }

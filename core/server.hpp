@@ -5,18 +5,27 @@
 #include <vector>
 #include "user.hpp"
 
-class Server
+#include <QObject>
+#include <QString>
+
+
+class Server: public QObject
 {
+	Q_OBJECT
+//signal for receive_messages
+signals:
+	void receive_message(const QString&, const QString&);
+
     private:
         //starting server, create socket,bind,listen,accept
-        static void start_server();
-        // read message and print in stdout
-        static void read_message(User u);
+        static void start_server(Server* s);
+        // read message and give signal
+        static void read_message(Server* s, User u);
     public:
         // default constructor
         Server();
-        //close all sockets
-        void stop_server();
+        //stop server ???????????????
+        void stop_server(); //?????
 };
 
 

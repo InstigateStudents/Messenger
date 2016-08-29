@@ -19,7 +19,7 @@ struct User {
 static std::string get_username_by_ip(std::string ip) {
     char buf[256];
     std::string line;
-    int i,pos;
+    unsigned int pos;
     std::string u_name;
     FILE* fd = fopen("./core/files/ipuser","r");
     if(fd == NULL) {
