@@ -1,0 +1,28 @@
+This is the README file of the Messenger project
+
+1. INTRODUCTION
+2. BUILD
+3. USAGE
+
+1. INTRODUCTION
+TODO: describe the project
+
+2. BUILD
+qmake -project
+qmake
+
+enter the generated Makefile and replace the following rows:
+CC            = gcc
+CXX           = g++
+with:
+
+CC            = gcc -std=c++0x
+CXX           = g++ -std=c++0x
+
+make
+
+3. USAGE
+a) run the main server
+./main_server
+b) run the messenger
+./messenger

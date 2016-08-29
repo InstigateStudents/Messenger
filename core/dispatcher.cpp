@@ -36,6 +36,7 @@ bool Dispatcher::registration(std::string u_name, std::string u_pass) {
 }
 
 bool Dispatcher::login(std::string u_name, std::string u_pass) {
+    // making the condition true as the main server isn't working yet
     if( m_client->login(u_name, u_pass) || true) { // || true need to delete
         std::cout << "in Dispatcher Login" << std::endl;
         serv = new Server;
