@@ -4,19 +4,22 @@
 #include <iostream>
 #include <stdio.h>
 
-struct User {
+struct User
+{
     std::string username;
     std::string current_ip;
     int current_socket;
     User() {}
-    User(std::string u, std::string c_i, int c_s) {
+    User(std::string u, std::string c_i, int c_s)
+    {
         username = u;
         current_ip = c_i;
         current_socket = c_s;
     }
 };
 
-static std::string get_username_by_ip(std::string ip) {
+static std::string get_username_by_ip(std::string ip)
+{
     char buf[256];
     std::string line;
     unsigned int pos;
@@ -40,7 +43,7 @@ static std::string get_ip_by_username(std::string u_name) {
     char buf[256];
     std::string line;
     std::string u_ip;
-    int i, pos;
+    unsigned int pos;
     FILE* fd = fopen("./core/files/ipuser","r");
     if(fd == NULL) {
         std::cerr << "File is not opened";

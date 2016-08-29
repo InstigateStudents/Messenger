@@ -33,6 +33,7 @@ bool Main_Client::registration(std::string u_name, std::string u_password) {
     std::string buffer;
     buffer = std::string("registration?") + u_name + std::string(";") + u_password;
     strcpy(buf,buffer.c_str());
+    // TODO handle write error case
     write(main_socket, buf, strlen(buf));
     bzero(buf,sizeof(buf));
  //   read(main_socket, buf, 256);
@@ -54,6 +55,7 @@ bool Main_Client::login(std::string u_name, std::string u_password) {
     std::string buffer;
     buffer = std::string("login?") + u_name + std::string(";") + u_password;
     strcpy(buf,buffer.c_str());
+    // TODO handle write error case
     write(main_socket, buf, strlen(buf));
    // read(main_socket, buf, 256);
     if(buf == "YES") {
@@ -68,6 +70,7 @@ bool Main_Client::logout() {
     char buf[256];
     std::string buffer = std::string("logout?") + me.username;
     strcpy(buf, buffer.c_str());
+    // TODO handle write error case
     write(main_socket, buf, strlen(buf));
   //  read(main_socket, buf, 256);
     if(buf == "YES") {
@@ -84,6 +87,7 @@ void Main_Client::give_online_list() {
     while(true) {
         char buf[4096];
         bzero(buf,sizeof(buf));
+        // TODO handle read error case
         read(main_socket, buf, 4096);
         fwrite(buf, sizeof(char), sizeof(buf), fd);
     }
@@ -95,6 +99,7 @@ void Main_Client::give_registered_list() {
     FILE* fd = fopen("./files/regs", "w");
         char buf[4096];
         bzero(buf,sizeof(buf));
+        // TODO handle read error case
         read(main_socket, buf, 4096);
         fwrite(buf, sizeof(char), sizeof(buf), fd);
     fclose(fd);

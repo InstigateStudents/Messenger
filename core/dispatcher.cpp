@@ -1,17 +1,17 @@
 #include "dispatcher.hpp"
 
-Dispatcher::Dispatcher(std::string ip) {
+dispatcher::dispatcher(std::string i)
+{
     m_client = NULL;
     serv = NULL;
-    m_client = new Main_Client(ip);
+    m_client = new Main_Client(i);
 }
 
-
-void Dispatcher::send_to(std::string u_name,std::string message)
+void dispatcher::send_to(const std::string& u_name, const std::string& message)
 {
     clear_clients_list();
-    for(std::vector<Client>::iterator i = clients_list.begin(); i != clients_list.end(); ++i) {
-        if(i->get_pair().username == u_name) {
+    for (clients::iterator i = clients_list.begin(); i != clients_list.end(); ++i) {
+        if (i->get_pair().username == u_name) {
             i->send_message(message);
             std::cout << "after sending"  <<std::endl;
             return;
@@ -22,53 +22,59 @@ void Dispatcher::send_to(std::string u_name,std::string message)
     std::cout << "after sending" <<std::endl;
 }
 
-void Dispatcher::clear_clients_list() {
-      for(std::vector<Client>::iterator i = clients_list.begin(); i != clients_list.end(); i++) {
-        if(i->get_pair().current_socket == -1) {
+void dispatcher::clear_clients_list()
+{
+      for (std::vector<Client>::iterator i = clients_list.begin(); i != clients_list.end(); i++) {
+        if (i->get_pair().current_socket == -1) {
             std::cout << "\n deleted user" << i->get_pair().username <<std::endl;
             clients_list.erase(i);
         }
     }
 }
 
-bool Dispatcher::registration(std::string u_name, std::string u_pass) {
+bool dispatcher::registration(std::string u_name, std::string u_pass)
+{
     return m_client->registration(u_name, u_pass);
 }
 
-bool Dispatcher::login(std::string u_name, std::string u_pass) {
+bool dispatcher::login(std::string u_name, std::string u_pass)
+{
     // making the condition true as the main server isn't working yet
-    if( m_client->login(u_name, u_pass) || true) { // || true need to delete
-        std::cout << "in Dispatcher Login" << std::endl;
+    if ( m_client->login(u_name, u_pass) || true) { // || true need to delete
+        std::cout << "in dispatcher Login" << std::endl;
         serv = new Server;
 	    connect(serv,SIGNAL(receive_message(const QString&, const QString&)),
-	    this,SIGNAL(new_message(const QString&, const QString&)),
+            this, SIGNAL(new_message(const QString&, const QString&)),
 	    Qt::QueuedConnection);	
         return true;
     }
     return false;
 }
 
-void Dispatcher::logout() {
+void dispatcher::logout()
+{
     m_client->logout();
     delete serv;
     serv = NULL;
     clients_list.clear();
 }
 
-Dispatcher::~Dispatcher() {
+dispatcher::~dispatcher()
+{
     delete m_client;
     m_client = NULL;
-    if(serv != NULL) {
+    if (serv != NULL) {
         delete serv;
         serv = NULL;
     }
 }
 
-std::vector<std::string> Dispatcher::get_onlines() {
+std::vector<std::string> dispatcher::get_onlines()
+{
     FILE* d = fopen("./core/files/ipuser","r");
     char buf[256];
     std::string buffer, name;
-    int pos;
+    unsigned int pos;
     std::vector<std::string> onlines;
     while(fgets(buf, 256, d)) {
         buffer = std::string(buf);
@@ -82,12 +88,12 @@ std::vector<std::string> Dispatcher::get_onlines() {
     return onlines;
 }
 
-
-std::vector<std::string> Dispatcher::get_registered_users() {
+std::vector<std::string> dispatcher::get_registered_users()
+{
     FILE* d = fopen("./core/files/regs","r");
     char buf[256];
     std::string buffer, name;
-    int pos;
+    unsigned int pos;
     std::vector<std::string> regs;
     while(fgets(buf, 256, d)) {
         buffer = std::string(buf);
@@ -103,7 +109,7 @@ std::vector<std::string> Dispatcher::get_registered_users() {
 
 
 /*int main() {
-    Dispatcher d;
+    dispatcher d;
  //   d.send_to("Gevorg","hasav?");
     d.registration("Artur","grigoryan");
  //   sleep(5);

@@ -10,25 +10,29 @@
 #include <QObject>
 
 
-class Dispatcher : public QObject {
-
+class dispatcher : public QObject
+{
 	Q_OBJECT
-//slots for signals
-signals:
-	void new_message(const QString&, const QString&);
+
+private:
+    typedef std::vector<Client> clients;
+    typedef std::vector<std::string> users;
 
 private:
     // list of users
-    std::vector<Client> clients_list;
+    clients clients_list;
     // pointer to main client object
     Main_Client* m_client;
     // pointer to server object 
     Server* serv;
+
+    // @name slots for signals
+signals:
+	void new_message(const QString&, const QString&);
+
 public:
-    // constructor takes in argument ip of main_server,and starting main_client
-    Dispatcher(std::string m_server_ip);
     // send message to signed user
-    void send_to(std::string u_name, std::string message);
+    void send_to(const std::string& u_name, const std::string& message);
     // check if we have connection with signed user
     void clear_clients_list();
     // registration function takes arguments username and password
@@ -38,11 +42,14 @@ public:
     // function logout
     void logout();
     // gives list of online users
-    std::vector<std::string> get_onlines();
+    users get_onlines();
     // gives list of registered users 
-    std::vector<std::string> get_registered_users();
+    users get_registered_users();
+public:
+    // constructor takes in argument ip of main_server,and starting main_client
+    dispatcher(std::string m_server_ip);
     //destructor
-    ~Dispatcher();
+    ~dispatcher();
 };
 
 

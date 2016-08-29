@@ -1,35 +1,52 @@
 #ifndef MESSENGER_H
 #define MESSENGER_H
+
 #include <string>
-#include <QObject>
-#include <QStringList>
 #include <vector>
 
+#include <QObject>
+#include <QStringList>
 
 class log_in_window;
 class messenger_window;
-//class main_client;
 
-class Dispatcher;
-class messenger: 
-public QObject
+class dispatcher;
+
+/**
+ * @brief messenger is the entry point
+ *
+ * It creates the GUI and sets up connection with the dispatcher, which is the
+ * public API of the messenger core.
+ */
+class messenger: public QObject
 {
-Q_OBJECT
+    Q_OBJECT
 private:
-	log_in_window * m_log_in_window;
-	messenger_window * m_messenger_window;
-	//main_client *m_main_client;
-	Dispatcher *m_dispatcher;
+	log_in_window* m_log_in_window;
+	messenger_window* m_messenger_window;
+	dispatcher* m_dispatcher;
+private:
 	QStringList fake_list_generator();
 
+    /// @name Connection setup and functionality
 public:
-	messenger(const std::string& ip);
+    /// @brief Starts the GUI
 	void run();
 public slots:
 	void login(const QString&, const QString&);
 	void send_to_client(const QString&, const QString&);
 	void receive_message(const QString&, const QString&);
-	void refresh_online_users(std::vector<std::string>);
+	void refresh_online_users(const std::vector<std::string>&);
+
+    /// @name Special member functions
+public:
+    /**
+     * @brief Constructor
+     * 
+     * @details Sets up the connection with dispatcher
+     * @param i - IP of the main server
+     */
+	messenger(const std::string& i);
 };
 
 #endif // MESSENGER_H
