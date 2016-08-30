@@ -3,6 +3,8 @@
 
 #include <QDialog>
 #include <QStringList>
+#include <QVector>
+
 
 class QHBoxLayout;
 class QVBoxLayout;
@@ -13,6 +15,10 @@ class QLabel;
 class QListWidget;
 class QListWidgetItem;
 class QStackedLayout;
+
+
+typedef QVector<QTextEdit*> Text_Edit_Container;
+typedef QVector<QListWidgetItem*> Widget_Item_Container;
 
 class messenger_window : public QDialog
 {
@@ -28,6 +34,16 @@ signals:
 private slots:
 	void send_message();
 	void set_color_black(int);
+	void set_current_user(int = 0);
+
+private:
+	void create_main_layout();
+	void create_left_left_layout();
+	void create_left_right_layout();
+	void create_left_side();
+	void create_right_side();
+	void connect_signal_slot();
+
 private:
 	QHBoxLayout *m_main_layout;
 
@@ -36,7 +52,8 @@ private:
 	QVBoxLayout *m_left_left_layout;
 	QLabel *m_current_user_name;
 	QStackedLayout *m_message_board;
-	QTextEdit *m_user_text_edit;
+	//QTextEdit *m_user_text_edit;
+	 Text_Edit_Container  m_user_text_edit;
 
 	QVBoxLayout *m_left_right_layout;
 
@@ -47,30 +64,13 @@ private:
 	QPushButton *m_send_button;
 
 
-	void create_main_layout();
-
-	void create_left_left_layout();
-	void create_left_right_layout();
-
-	void create_left_side();
-
-	void create_right_side();
-
-	void connect_signal_slot();
-
-
-	//
 	int m_user_count;
 	int m_current_user;
 	QStringList m_user_name;
 
 
 	QListWidget *m_online_users;
-	QListWidgetItem *m_list_widget_item;
-private slots:
-	void set_current_user(int = 0);
-
-
+	Widget_Item_Container 	m_list_widget_item;
 };
 
 

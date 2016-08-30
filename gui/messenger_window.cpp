@@ -17,6 +17,8 @@
 #include <QDesktopWidget>
 #include <iostream>
 
+#include <QVector>
+
 messenger_window::messenger_window(const QStringList& l) :QDialog()
 {
 	m_current_user = 0;
@@ -55,11 +57,16 @@ void messenger_window::create_left_left_layout()
 	sb -> setValue(sb->maximum());
 	m_message_text -> setFixedHeight(50);
 	//   ---- new Func
-	m_user_text_edit = new QTextEdit[m_user_count];
+	//m_user_text_edit = new QTextEdit[m_user_count];
+	m_user_text_edit.resize(m_user_count);
+
 	for (int i = 0; i < m_user_count; ++i) {
-		m_message_board -> addWidget(m_user_text_edit+i);
-		m_user_text_edit[i].append(m_user_name[i]);
-		m_user_text_edit[i].setReadOnly(true);
+		m_user_text_edit[i] = new QTextEdit;
+	}
+	for (int i = 0; i < m_user_count; ++i) {
+		m_message_board -> addWidget(m_user_text_edit[i]);
+		m_user_text_edit[i]->append(m_user_name[i]);
+		m_user_text_edit[i]->setReadOnly(true);
 	}
 	//
 	m_current_user_name = new QLabel;
@@ -106,29 +113,32 @@ void messenger_window::create_right_side()
 
 	//   ---- new func
 	m_online_users = new QListWidget();
-	m_list_widget_item = new QListWidgetItem[m_user_count];
+	m_list_widget_item.reserve(m_user_count);
 
-	for(int i = 0; i < m_user_count; ++i){
-		QIcon icon("/home/student/Desktop/Messenger/gui/user.png");
-
-		m_list_widget_item[i].setIcon(icon);
-		m_list_widget_item[i].setText(m_user_name[i]);
-		m_list_widget_item[i].setSizeHint(QSize(50,50));
-
-		m_online_users -> addItem( &m_list_widget_item[i]);
+	for (int i = 0; i < m_user_count; ++i) {
+		m_list_widget_item[i] = new QListWidgetItem;
 	}
-	m_right_layout -> addWidget(m_online_users);
 
-	m_right_widget -> setLayout(m_right_layout); //----
+	for (int i = 0; i < m_user_count; ++i) {
+		QIcon icon("./gui/user.png");
+		m_list_widget_item[i]->setIcon(icon);
+		m_list_widget_item[i]->setText(m_user_name[i]);
+		m_list_widget_item[i]->setSizeHint(QSize(50,50));
+
+		m_online_users->addItem(m_list_widget_item[i]);
+	}
+	m_right_layout->addWidget(m_online_users);
+
+	m_right_widget->setLayout(m_right_layout); //----
 }
 
 void messenger_window::send_message()
 {
 
-	if ( !(m_message_text -> toPlainText().isEmpty()) ) {
+	if ( !(m_message_text->toPlainText().isEmpty()) ) {
 		QString msg = ">>>>\n"+m_message_text -> toPlainText()+"\n";
-		m_user_text_edit[m_current_user].setTextColor(QColor(0,0,0));
-		m_user_text_edit[m_current_user].append(msg);
+		m_user_text_edit[m_current_user]->setTextColor(QColor(0,0,0));
+		m_user_text_edit[m_current_user]->append(msg);
 		//emit
 		QString to(m_user_name[m_current_user]);
 		QString m(m_message_text -> toPlainText());
@@ -140,22 +150,43 @@ void messenger_window::send_message()
 void messenger_window::receive_message(const QString& from, const QString& msg)
 {
 	int index = m_user_name.indexOf(from);
-	m_user_text_edit[index].setTextColor(QColor(139,0,0));
-	m_user_text_edit[index].append("<<<<\n"+msg+"\n");
+	m_user_text_edit[index]->setTextColor(QColor(139,0,0));
+	m_user_text_edit[index]->append("<<<<\n"+msg+"\n");
 	if (m_current_user != index) {
-		m_list_widget_item[index].setTextColor(QColor(255,0,0));
+		m_list_widget_item[index]->setTextColor(QColor(255,0,0));
 	}
 }
 
 void messenger_window::refresh_show_online_users(QVector<QString> online)
 {
-	for (int i = 0; i < m_user_count; ++i) {
-		m_list_widget_item[i].setHidden(true);
-	}
 	
 	for (int i = 0; i < m_user_count; ++i) {
-		int index = m_user_name.indexOf(online[i]);
-		m_list_widget_item[index].setHidden(false);
+		m_list_widget_item[i]->setHidden(true);
+	}
+	
+	int j = -1;
+	for (int i = 0; i < online.size(); ++i) {
+		if (m_user_name.contains(online[i])) {
+			j = m_user_name.indexOf(online[i]);
+			m_list_widget_item[j]->setHidden(false);
+		} else {
+			++m_user_count;
+			m_user_name << online[i];
+			QTextEdit* t = new QTextEdit;
+			m_user_text_edit.push_back(t);
+			int q = m_user_text_edit.size()-1;
+			m_message_board->addWidget(m_user_text_edit[q]);
+			
+			QListWidgetItem *a = new QListWidgetItem;
+			QIcon icon("./gui/user.png");
+			a->setIcon(icon);
+			a->setText(m_user_name[i]);
+			a->setSizeHint(QSize(50,50));
+			a->setHidden(false);
+			m_list_widget_item.push_back(a);
+			int b = m_list_widget_item.size()-1;
+			m_online_users->addItem(m_list_widget_item[b]);
+		}	
 	}
 
 }
@@ -189,5 +220,5 @@ void messenger_window::set_current_user(int i)
 
 void messenger_window::set_color_black(int i)
 {
-	m_list_widget_item[i].setTextColor(QColor(0,0,0));
+	m_list_widget_item[i]->setTextColor(QColor(0,0,0));
 }
