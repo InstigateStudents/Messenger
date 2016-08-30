@@ -1,5 +1,6 @@
 #ifndef _CLIENT_HPP_
 #define _CLIENT_HPP_
+
 #include "user.hpp"
 #include <thread>
 #include <string>
@@ -8,6 +9,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <exception>
+#include <cassert>
 
 class client
 {

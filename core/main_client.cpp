@@ -2,6 +2,8 @@
 
 main_client::main_client(const std::string& s_i)
 {
+    m_main_socket = -1;
+    assert(!s_i.empty());
     m_main_socket= socket(AF_INET, SOCK_STREAM, 0); 
     m_me.current_socket = m_main_socket;
     m_me.current_ip = std::to_string(INADDR_ANY);
@@ -14,6 +16,8 @@ main_client::main_client(const std::string& s_i)
 
 void main_client::connect_server(int& socket,const std::string& serv_ip)
 {
+    assert(socket != -1);
+    assert(!serv_ip.empty());
     sockaddr_in serv_addr;
     char buf[256];
     bzero((sockaddr*)&serv_addr, sizeof(serv_addr));
@@ -30,6 +34,8 @@ void main_client::connect_server(int& socket,const std::string& serv_ip)
 
 bool main_client::registration(const std::string& u_n,const std::string& u_p)
 {
+    assert(!u_n.empty());
+    assert(!u_p.empty());
     std::cout << "in reg" << std::endl;
     char buf[256];
     bzero(buf,sizeof(buf));
@@ -55,6 +61,9 @@ bool main_client::registration(const std::string& u_n,const std::string& u_p)
 
 bool main_client::login(const std::string& u_n,const std::string& u_p)
 {
+    
+    assert(!u_n.empty());
+    assert(!u_p.empty());
     std::cout << "in main_client Login" << std::endl;
     m_me.username = u_n;
     std::cout << "in login" << std::endl;

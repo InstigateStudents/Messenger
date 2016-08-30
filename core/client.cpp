@@ -2,6 +2,7 @@
 
 client::client(const std::string& u_n)
 {
+    assert(!u_n.empty());
     pair.username = u_n;
     pair.current_ip = get_ip_by_username(u_n);
     pair.current_socket = socket(AF_INET, SOCK_STREAM, 0);
@@ -29,6 +30,7 @@ void client::start_communication(user& p)
 
 void client::send_message(const std::string& m)
 {
+    assert(!m.empty());
     char buf[1024];
     strcpy(buf,  m.c_str());
         if(write(pair.current_socket, buf, strlen(buf)) < 0 ) {
