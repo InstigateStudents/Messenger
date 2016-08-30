@@ -8,17 +8,6 @@ This is the README file of the Messenger project
 TODO: describe the project
 
 2. BUILD
-qmake -project
-qmake
-
-enter the generated Makefile and replace the following rows:
-CC            = gcc
-CXX           = g++
-with:
-
-CC            = gcc -std=c++0x
-CXX           = g++ -std=c++0x
-
 make
 
 3. USAGE
