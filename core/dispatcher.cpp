@@ -1,7 +1,8 @@
 #include "dispatcher.hpp"
 
 dispatcher::dispatcher(const std::string& i)
-{   
+{
+    assert(!i.empty());
     m_client = NULL;
     serv = NULL;
     m_client = new main_client(i);
@@ -9,6 +10,8 @@ dispatcher::dispatcher(const std::string& i)
 
 void dispatcher::send_to(const std::string& u_n, const std::string& m)
 {
+    assert(!u_n.empty());
+    assert(!m.empty());
     clear_clients_list();
     for (clients::iterator i = m_clients_list.begin(); i != m_clients_list.end(); ++i) {
         if (i->get_pair().username == u_n) {
@@ -34,11 +37,15 @@ void dispatcher::clear_clients_list()
 
 bool dispatcher::registration(const std::string& u_n,const std::string& u_p)
 {
+    assert(!u_n.empty());
+    assert(!u_p.empty());
     return m_client->registration(u_n, u_p);
 }
 
 bool dispatcher::login(const std::string& u_n, const std::string& u_p)
 {
+    assert(!u_n.empty());
+    assert(!u_p.empty());
     // making the condition true as the main server isn't working yet
     if ( m_client->login(u_n, u_p) || true) { // || true need to delete
         std::cout << "in dispatcher Login" << std::endl;

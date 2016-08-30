@@ -9,6 +9,7 @@
 #include <string.h>
 #include <arpa/inet.h>
 #include <exception>
+#include <cassert>
 
 
 class main_client
