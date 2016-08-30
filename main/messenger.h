@@ -34,6 +34,7 @@ public:
 	void run();
 public slots:
 	void login(const QString&, const QString&);
+	void registration(const QString& u, const QString& p);
 	void send_to_client(const QString&, const QString&);
 	void receive_message(const QString&, const QString&);
 	void refresh_online_users(const std::vector<std::string>&);

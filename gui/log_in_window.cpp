@@ -26,50 +26,57 @@ log_in_window::log_in_window(QWidget* p)
 
 void log_in_window::checking_login_fields(const QString& s)
 {
-	if (uname_line_edit->text().isEmpty() ||
-            upasswd_line_edit->text().isEmpty()) {
-		login_button->setEnabled(false);
+	if (m_uname_line_edit->text().isEmpty() ||
+            m_upasswd_line_edit->text().isEmpty()) {
+		m_login_button->setEnabled(false);
+		m_reg_button->setEnabled(false);
 	} else {
-		login_button->setEnabled(true);
+		m_login_button->setEnabled(true);
+		m_reg_button->setEnabled(true);
 	}
 }
 
 void log_in_window::checkin_login()
 {
-	emit login(uname_line_edit->text(), upasswd_line_edit->text());
+	emit login(m_uname_line_edit->text(), m_upasswd_line_edit->text());
+}
+
+void log_in_window::new_registration()
+{
+	emit registration(m_uname_line_edit->text(), m_upasswd_line_edit->text());
 }
 
 void log_in_window::create_username_layout()
 {
-	uname_label = new QLabel("User name");
-	uname_line_edit = new QLineEdit;
-	uname_layout = new QHBoxLayout;
-	uname_layout->addWidget(uname_label);
-	uname_layout->addWidget(uname_line_edit);
+	m_uname_label = new QLabel("User name");
+	m_uname_line_edit = new QLineEdit;
+	m_uname_layout = new QHBoxLayout;
+	m_uname_layout->addWidget(m_uname_label);
+	m_uname_layout->addWidget(m_uname_line_edit);
 }
 
 void log_in_window::create_passwd_layout()
 {
-	upasswd_label = new QLabel("Password");
-	upasswd_line_edit = new QLineEdit;
-	upasswd_line_edit ->setEchoMode(QLineEdit::Password);
-	upasswd_layout = new QHBoxLayout;
-	upasswd_layout -> addWidget(upasswd_label);
-	upasswd_layout -> addStretch();
-	upasswd_layout -> addWidget(upasswd_line_edit);
+	m_upasswd_label = new QLabel("Password");
+	m_upasswd_line_edit = new QLineEdit;
+	m_upasswd_line_edit ->setEchoMode(QLineEdit::Password);
+	m_upasswd_layout = new QHBoxLayout;
+	m_upasswd_layout -> addWidget(m_upasswd_label);
+	m_upasswd_layout -> addStretch();
+	m_upasswd_layout -> addWidget(m_upasswd_line_edit);
 }
 
 void log_in_window::create_error_layout()
 {
-	error_layout = new QHBoxLayout;
-	error_label  = new QLabel(/*"Erro"*/);
-	error_layout->addWidget(error_label);
+	m_error_layout = new QHBoxLayout;
+	m_error_label  = new QLabel(/*"Erro"*/);
+	m_error_layout->addWidget(m_error_label);
 }
 
 void log_in_window::show_login_error(const QString &s)
 {
-	error_label->setAlignment(Qt::AlignRight);
-	error_label->setText(s);
+	m_error_label->setAlignment(Qt::AlignRight);
+	m_error_label->setText(s);
 	QRect r = geometry();
 	int x = r.x();
 	int y = r.y();
@@ -84,21 +91,22 @@ void log_in_window::show_login_error(const QString &s)
 
 void log_in_window::create_button_layout()
 {
-	reg_button = new QPushButton("Registration");
-	login_button = new QPushButton("LogIn");
-	login_button -> setEnabled(false);
-	butt_layout = new QHBoxLayout;
-	butt_layout -> addWidget(reg_button);
-	butt_layout -> addWidget(login_button);
+	m_reg_button = new QPushButton("Registration");
+	m_reg_button->setEnabled(false);
+	m_login_button = new QPushButton("LogIn");
+	m_login_button->setEnabled(false);
+	m_butt_layout = new QHBoxLayout;
+	m_butt_layout->addWidget(m_reg_button);
+	m_butt_layout->addWidget(m_login_button);
 }
 
 void log_in_window::create_main_layout()
 {
 	QVBoxLayout* reg_layout = new QVBoxLayout;
-	reg_layout->addLayout(uname_layout);
-	reg_layout->addLayout(upasswd_layout);
-	reg_layout->addLayout(error_layout);
-	reg_layout->addLayout(butt_layout);
+	reg_layout->addLayout(m_uname_layout);
+	reg_layout->addLayout(m_upasswd_layout);
+	reg_layout->addLayout(m_error_layout);
+	reg_layout->addLayout(m_butt_layout);
 	setLayout(reg_layout);
 	setWindowTitle("ITC Local Messenger");
 	setFixedHeight(sizeHint().height());
@@ -107,11 +115,13 @@ void log_in_window::create_main_layout()
 
 void log_in_window::connect_signal_slot()
 {
-	QObject::connect(uname_line_edit,SIGNAL(textChanged(const QString&)),
+	QObject::connect(m_uname_line_edit,SIGNAL(textChanged(const QString&)),
 			this, SLOT(checking_login_fields(const QString&)));
-	QObject::connect(upasswd_line_edit,SIGNAL(textChanged(const QString&)),
+	QObject::connect(m_upasswd_line_edit,SIGNAL(textChanged(const QString&)),
 			this, SLOT(checking_login_fields(const QString&)));
-	QObject::connect(login_button, SIGNAL(clicked()),
+	QObject::connect(m_login_button, SIGNAL(clicked()),
 			this, SLOT(checkin_login()));
+	QObject::connect(m_reg_button,SIGNAL(clicked()),
+			this, SLOT(new_registration()));
 }
 

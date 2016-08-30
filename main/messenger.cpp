@@ -13,7 +13,9 @@ messenger::messenger(const std::string& i)
     m_dispatcher = new dispatcher(i);
     connect(m_log_in_window, SIGNAL(login(const QString&, const QString&)),
             this, SLOT(login(const QString&, const QString&)), Qt::QueuedConnection);
-    connect(m_dispatcher, SIGNAL(new_message(const QString&, const QString&)),
+    connect(m_log_in_window, SIGNAL(registration(const QString&, const QString&)),
+			this, SLOT(registration(const QString&, const QString&)));
+	connect(m_dispatcher, SIGNAL(new_message(const QString&, const QString&)),
             this, SLOT(receive_message(const QString&, const QString&)), Qt::QueuedConnection);
 }
 
@@ -40,7 +42,8 @@ void messenger::login(const QString& u, const QString& p)
     assert(!p.isEmpty());
     assert(0 != m_dispatcher);
     bool b = m_dispatcher->login(u.toStdString(), p.toStdString()); 
-    if (b) {
+    if (true) {
+		std::cout<<"messenger.cpp\n";
         assert(0 != m_log_in_window);
         m_log_in_window->hide();   
         QStringList l = fake_list_generator(); 
@@ -55,6 +58,15 @@ void messenger::login(const QString& u, const QString& p)
         m_log_in_window->show_login_error("Incorrect username or password.");
     }
 }
+
+void messenger::registration(const QString& u, const QString& p)
+{
+	//function of Artur
+	std::cout<<"new Account\n";
+	std::cout<<u.toStdString()<<"\t"<<p.toStdString()<<"\n";
+}
+
+
 
 void messenger::send_to_client(const QString& t, const QString& m)
 {
