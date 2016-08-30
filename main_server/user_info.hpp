@@ -3,7 +3,8 @@
 
 #include <string>
 
-struct user_info {
+struct user_info
+{
 	std::string m_pswd;
 	std::string IP;
 	user_info();
