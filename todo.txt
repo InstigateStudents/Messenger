@@ -6,12 +6,15 @@ General
 GUI
 Login dialog
 - add error messaging for wrong login
-- disable button till username/password are not filled in
+- disable button till username/password are not filled in - done
 - visual effect on wrong login (vibration)
 
 Register dialog
-- create dialog
+- create dialog - no new dialog is opened
 
 Messenger window
 - initial version: fixed size window with table view
+
+Messaging
+- Handle Enter key
 
