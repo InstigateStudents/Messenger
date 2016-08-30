@@ -157,7 +157,7 @@ void messenger_window::receive_message(const QString& from, const QString& msg)
 	}
 }
 
-void messenger_window::refresh_show_online_users(QVector<QString> online)
+void messenger_window::refresh_show_online_users(const QVector<QString>& o)
 {
 	
 	for (int i = 0; i < m_user_count; ++i) {
@@ -165,13 +165,13 @@ void messenger_window::refresh_show_online_users(QVector<QString> online)
 	}
 	
 	int j = -1;
-	for (int i = 0; i < online.size(); ++i) {
-		if (m_user_name.contains(online[i])) {
-			j = m_user_name.indexOf(online[i]);
+	for (int i = 0; i < o.size(); ++i) {
+		if (m_user_name.contains(o[i])) {
+			j = m_user_name.indexOf(o[i]);
 			m_list_widget_item[j]->setHidden(false);
 		} else {
 			++m_user_count;
-			m_user_name << online[i];
+			m_user_name << o[i];
 			QTextEdit* t = new QTextEdit;
 			m_user_text_edit.push_back(t);
 			int q = m_user_text_edit.size()-1;

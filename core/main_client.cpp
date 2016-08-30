@@ -49,7 +49,7 @@ bool main_client::registration(const std::string& u_n,const std::string& u_p)
     else {
         bzero(buf,sizeof(buf));
     }
-//   read(main_socket, buf, 256);
+    read(m_main_socket, buf, 256);
     if (buf == "YES") {
         return true;
     }
@@ -75,16 +75,16 @@ bool main_client::login(const std::string& u_n,const std::string& u_p)
     // TODO handle write error case
     if (write(m_main_socket, buf, strlen(buf)) < 0) {
     //exception
- //       throw std::runtime_error("Error in login");
+        throw std::runtime_error("Error in login");
     }
     else {
-   // read(main_socket, buf, 256);
-    if (buf == "YES") {
-        return true;
-    }
-    else {
-        return false;
-    }   
+        read(m_main_socket, buf, 256);
+        if (buf == "YES") {
+            return true;
+        }
+        else {
+            return false;
+        }   
     }
 }
 
@@ -98,7 +98,8 @@ bool main_client::logout()
         throw std::runtime_error("Error in logout");
     }
     else {
-  //        read(main_socket, buf, 256);
+            read(m_main_socket, buf, 256);
+            printf(buf, 256);
             if (buf == "YES") {
                 return true;
             }
@@ -111,7 +112,7 @@ bool main_client::logout()
 
 void main_client::give_online_list() 
 {
-    FILE* fd = fopen("./core/files/ipuser", "w");
+    FILE* fd = fopen("./core/files/ipuser0", "w");
     if (fd == NULL) {
         throw std::runtime_error("Error in open file");
     }

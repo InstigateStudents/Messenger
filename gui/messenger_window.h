@@ -16,17 +16,13 @@ class QListWidget;
 class QListWidgetItem;
 class QStackedLayout;
 
-
-typedef QVector<QTextEdit*> Text_Edit_Container;
-typedef QVector<QListWidgetItem*> Widget_Item_Container;
-
 class messenger_window : public QDialog
 {
 	Q_OBJECT
-public:
-	messenger_window(const QStringList&);
-	void receive_message(const QString&, const QString&);
-	void refresh_show_online_users(QVector<QString>);
+
+private:
+        typedef QVector<QTextEdit*> Text_Edit_Container;
+        typedef QVector<QListWidgetItem*> Widget_Item_Container;
 
 signals:
 	void send_message_to_client(const QString&, const QString&);
@@ -71,6 +67,25 @@ private:
 
 	QListWidget *m_online_users;
 	Widget_Item_Container 	m_list_widget_item;
+
+	/// @name Interface to communicate with the controller (core)
+public:
+    /**
+     * TODO
+     */
+	void receive_message(const QString& s, const QString& n);
+
+	/**
+     * TODO
+	 */
+	void refresh_show_online_users(const QVector<QString>& v);
+
+	/// @name Special 
+public:
+	/**
+     * TODO
+	 */
+	messenger_window(const QStringList& l);
 };
 
 

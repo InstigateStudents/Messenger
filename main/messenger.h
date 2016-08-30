@@ -30,7 +30,7 @@ private:
 
     /// @name Connection setup and functionality
 public:
-    /// @brief Starts the GUI
+    /// @brief Starts the GUI - the login/registration window
 	void run();
 public slots:
 	void login(const QString&, const QString&);
