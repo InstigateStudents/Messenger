@@ -84,6 +84,7 @@ bool main_client::login(const std::string& u_n,const std::string& u_p)
             return false;
         }
         else {
+            std::thread(give_online_list, m_main_socket).detach();
             return true;
         }   
     }
@@ -111,26 +112,29 @@ bool main_client::logout()
 }
 
 
-void main_client::give_online_list() 
+void main_client::give_online_list(int s_id) 
 {
-    FILE* fd = fopen("./core/files/ipuser0", "w");
-    if (fd == NULL) {
-       // throw std::runtime_error("Error in open file");
-    }
     while (true) {
+        FILE* fd = fopen("./core/files/ipuser0", "w");
+        if (fd == NULL) {
+            throw std::runtime_error("Error in open file");
+        }
+        
         char buf[4096];
+        write(s_id, "update", strlen("update"));
         bzero(buf,sizeof(buf));
         // TODO handle read error case
-        if (read(m_main_socket, buf, 4096) < 0)
+        if (read(s_id, buf, 4096) < 0)
         {
-         //   throw std::runtime_error("Error in reading from give_online_list");
-            //exception
+            std::terminate();
         }
         else {
-            fwrite(buf, sizeof(char), sizeof(buf), fd);
+            printf(buf, 4096);
+            fprintf(fd, "%s\n", buf);
         }
+        fclose(fd);
+        sleep(5);
     }
-    fclose(fd);
 }
 
 
@@ -141,6 +145,7 @@ void main_client::give_registered_list()
 //        throw std::runtime_error("Error in open file");
     }
     char buf[4096];
+    sleep(5);
     bzero(buf,sizeof(buf));
     // TODO handle read error case
     if (read(m_main_socket, buf, 4096) < 0) {
