@@ -48,16 +48,15 @@ bool main_client::registration(const std::string& u_n,const std::string& u_p)
     }
     else {
         bzero(buf,sizeof(buf));
+        read(m_main_socket, buf, 256);
+        if (strcmp(buf, "YES")) {
+            return false;
+        }
+        else {
+            return true;
+        }      
     }
-    read(m_main_socket, buf, 256);
-    if (buf == "YES") {
-        return true;
-    }
-    else {
-        return false;
-    }   
 }
-
 
 bool main_client::login(const std::string& u_n,const std::string& u_p)
 {
@@ -78,12 +77,14 @@ bool main_client::login(const std::string& u_n,const std::string& u_p)
         throw std::runtime_error("Error in login");
     }
     else {
+        bzero(buf,sizeof(buf));
         read(m_main_socket, buf, 256);
-        if (buf == "YES") {
-            return true;
+        printf(buf, 256);
+        if (strcmp(buf, "YES")) {
+            return false;
         }
         else {
-            return false;
+            return true;
         }   
     }
 }

@@ -47,7 +47,9 @@ bool dispatcher::login(const std::string& u_n, const std::string& u_p)
     assert(!u_n.empty());
     assert(!u_p.empty());
     // making the condition true as the main server isn't working yet
-    if ( m_client->login(u_n, u_p)) { 
+        bool b = m_client->login(u_n, u_p);
+        std::cout << b << std::endl;
+    if (b) { 
         std::cout << "in dispatcher Login" << std::endl;
         serv = new server;
 	    connect(serv,SIGNAL(receive_message(const QString&, const QString&)),
