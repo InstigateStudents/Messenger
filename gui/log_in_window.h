@@ -23,25 +23,26 @@ class log_in_window : public QDialog
 private slots:
     void checking_login_fields(const QString&);
     void checkin_login();
+	void new_registration();
 signals:
     void login(const QString&, const QString&);
-
+	void registration(const QString& u, const QString& p);
 private:
-    QHBoxLayout* uname_layout;
-    QLabel* uname_label;
-    QLineEdit* uname_line_edit;
+    QHBoxLayout* m_uname_layout;
+    QLabel* m_uname_label;
+    QLineEdit* m_uname_line_edit;
 
-    QHBoxLayout* upasswd_layout;
-    QLabel* upasswd_label;
-    QLineEdit* upasswd_line_edit;
+    QHBoxLayout* m_upasswd_layout;
+    QLabel* m_upasswd_label;
+    QLineEdit* m_upasswd_line_edit;
 
-    QHBoxLayout* error_layout;
-    QLabel* error_label;
+    QHBoxLayout* m_error_layout;
+    QLabel* m_error_label;
 
-    QHBoxLayout* butt_layout;
-    QPushButton* reg_button;
-    QPushButton* login_button;
-
+    QHBoxLayout* m_butt_layout;
+    QPushButton* m_reg_button;
+    QPushButton* m_login_button;
+private:
     void connect_signal_slot();
     void create_username_layout();
     void create_passwd_layout();

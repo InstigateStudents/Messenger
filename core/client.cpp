@@ -8,7 +8,7 @@ client::client(const std::string& u_n)
     pair.current_socket = socket(AF_INET, SOCK_STREAM, 0);
     if (pair.current_socket < 0) {
         std::cerr << "Error in creating socket" << std::endl;
-        throw std::runtime_error("Error in creating socket");
+ //       throw std::runtime_error("Error in creating socket");
     }
     std::thread(start_communication, pair).join();
 }

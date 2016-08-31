@@ -9,7 +9,7 @@ main_client::main_client(const std::string& s_i)
     m_me.current_ip = std::to_string(INADDR_ANY);
     if (m_me.current_socket < 0) {
         std::cerr << "Error in creating socket" << std::endl;
-        throw std::runtime_error("Error in creating socket");
+ //       throw std::runtime_error("Error in creating socket");
     }
     std::thread(connect_server, m_me.current_socket, s_i).join();
 }
@@ -44,7 +44,7 @@ bool main_client::registration(const std::string& u_n,const std::string& u_p)
     strcpy(buf,buffer.c_str());
     // TODO handle write error case
     if (write(m_main_socket, buf, strlen(buf)) < 0) {
-        throw std::runtime_error("Error in registration");
+   //     throw std::runtime_error("Error in registration");
     }
     else {
         bzero(buf,sizeof(buf));
@@ -74,7 +74,7 @@ bool main_client::login(const std::string& u_n,const std::string& u_p)
     // TODO handle write error case
     if (write(m_main_socket, buf, strlen(buf)) < 0) {
     //exception
-        throw std::runtime_error("Error in login");
+    //    throw std::runtime_error("Error in login");
     }
     else {
         bzero(buf,sizeof(buf));
@@ -96,7 +96,7 @@ bool main_client::logout()
     strcpy(buf, buffer.c_str());
     // TODO handle write error case
     if (write(m_main_socket, buf, strlen(buf)) < 0) {
-        throw std::runtime_error("Error in logout");
+     //   throw std::runtime_error("Error in logout");
     }
     else {
             read(m_main_socket, buf, 256);
@@ -115,7 +115,7 @@ void main_client::give_online_list()
 {
     FILE* fd = fopen("./core/files/ipuser0", "w");
     if (fd == NULL) {
-        throw std::runtime_error("Error in open file");
+       // throw std::runtime_error("Error in open file");
     }
     while (true) {
         char buf[4096];
@@ -123,7 +123,7 @@ void main_client::give_online_list()
         // TODO handle read error case
         if (read(m_main_socket, buf, 4096) < 0)
         {
-            throw std::runtime_error("Error in reading from give_online_list");
+         //   throw std::runtime_error("Error in reading from give_online_list");
             //exception
         }
         else {
@@ -138,13 +138,13 @@ void main_client::give_registered_list()
 {
     FILE* fd = fopen("./files/regs", "w");
     if ( fd == NULL) {
-        throw std::runtime_error("Error in open file");
+//        throw std::runtime_error("Error in open file");
     }
     char buf[4096];
     bzero(buf,sizeof(buf));
     // TODO handle read error case
     if (read(m_main_socket, buf, 4096) < 0) {
-        throw std::runtime_error("Error in reading from give_registered_list");
+  //      throw std::runtime_error("Error in reading from give_registered_list");
     }
     fwrite(buf, sizeof(char), sizeof(buf), fd);
     fclose(fd);
