@@ -38,7 +38,7 @@ public slots:
 	void send_to_client(const QString&, const QString&);
 	void receive_message(const QString&, const QString&);
 	void refresh_online_users(const std::vector<std::string>&);
-
+	void user_logout();
     /// @name Special member functions
 public:
     /**

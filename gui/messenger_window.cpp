@@ -83,7 +83,10 @@ void messenger_window::create_left_right_layout()
 {
     m_left_right_layout = new QVBoxLayout;
 
-    m_send_button = new QPushButton("send");
+    m_send_button = new QPushButton();
+	QIcon icon("./gui/icons/send.png");
+	m_send_button->setIconSize(QSize(20,30));
+	m_send_button->setIcon(icon);
 
 
     m_left_right_layout -> addStretch();
@@ -109,7 +112,14 @@ void messenger_window::create_right_side()
 
 	m_right_layout = new QVBoxLayout;
 	QLabel *ob = new QLabel("<h2><i>ONLINE USERS</i></h2>");
-	m_right_layout -> addWidget(ob);
+	m_logout = new QPushButton();
+	QIcon icon("./gui/icons/logout.png");
+	m_logout->setIcon(icon);
+	QHBoxLayout* t = new QHBoxLayout;
+	t->addWidget(ob);
+	t->addStretch();
+	t->addWidget(m_logout);
+	m_right_layout -> addLayout(t);
 
 	//   ---- new func
 	m_online_users = new QListWidget();
@@ -120,7 +130,7 @@ void messenger_window::create_right_side()
 	}
 
 	for (int i = 0; i < m_user_count; ++i) {
-		QIcon icon("./gui/user.png");
+		QIcon icon("./gui/icons/user.png");
 		m_list_widget_item[i]->setIcon(icon);
 		m_list_widget_item[i]->setText(m_user_name[i]);
 		m_list_widget_item[i]->setSizeHint(QSize(50,50));
@@ -178,7 +188,7 @@ void messenger_window::refresh_show_online_users(const QVector<QString>& o)
 			m_message_board->addWidget(m_user_text_edit[q]);
 			
 			QListWidgetItem *a = new QListWidgetItem;
-			QIcon icon("./gui/user.png");
+			QIcon icon("./gui/icons/user.png");
 			a->setIcon(icon);
 			a->setText(m_user_name[i]);
 			a->setSizeHint(QSize(50,50));
@@ -204,7 +214,8 @@ void messenger_window::connect_signal_slot()
 					m_message_board,SLOT(setCurrentIndex(int)));
 	QObject::connect(m_online_users,SIGNAL(currentRowChanged(int)),
 					this,SLOT(set_color_black(int)));
-
+	QObject::connect(m_logout, SIGNAL(clicked()),
+					this, SIGNAL(logout()));
 }
 
 void messenger_window::set_current_user(int i)

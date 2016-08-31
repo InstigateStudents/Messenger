@@ -125,3 +125,8 @@ void log_in_window::connect_signal_slot()
 			this, SLOT(new_registration()));
 }
 
+void log_in_window::clear_login_fields()
+{
+	m_uname_line_edit->setText("");
+	m_upasswd_line_edit->setText("");
+}

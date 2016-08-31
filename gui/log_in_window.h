@@ -57,7 +57,7 @@ public:
      * @param s - the message to display
      */
     void show_login_error(const QString& s);
-
+	void clear_login_fields();
     /// @name Special member functions
 public:
     /**
