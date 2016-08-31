@@ -30,9 +30,10 @@ QStringList messenger::fake_list_generator()
     assert(0 != m_dispatcher);
     std::vector<std::string> n = m_dispatcher->get_onlines();
     QStringList l;
-    for (unsigned int i = 0; i < n.size(); ++i) {
+    /*for (unsigned int i = 0; i < n.size(); ++i) {
         l << QString::fromUtf8(n[i].c_str());
-    }
+    }*/
+	l << "Art" << "Sash" << "Gev";
     return l;
 }
 
@@ -41,17 +42,19 @@ void messenger::login(const QString& u, const QString& p)
     assert(!u.isEmpty());
     assert(!p.isEmpty());
     assert(0 != m_dispatcher);
-    bool b = m_dispatcher->login(u.toStdString(), p.toStdString()); 
+    //bool b = m_dispatcher->login(u.toStdString(), p.toStdString()); 
     if (true) {
 		std::cout<<"messenger.cpp\n";
         assert(0 != m_log_in_window);
-        m_log_in_window->hide();   
+        m_log_in_window->hide(); 
+	    m_log_in_window->clear_login_fields();	
         QStringList l = fake_list_generator(); 
         m_messenger_window = new messenger_window(l);
         connect(m_messenger_window,
                 SIGNAL(send_message_to_client(const QString&, const QString&)),
                 this,
                 SLOT(send_to_client(const QString&, const QString&)), Qt::QueuedConnection);
+		connect(m_messenger_window, SIGNAL(logout()), this, SLOT(user_logout()));
         assert(0 != m_messenger_window);
         m_messenger_window->show();
     } else {
@@ -94,3 +97,8 @@ void messenger::refresh_online_users(const std::vector<std::string>& v)
     m_messenger_window->refresh_show_online_users(online);
 }
 
+void messenger::user_logout()
+{
+	m_messenger_window->close();
+	m_log_in_window->show();
+}

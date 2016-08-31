@@ -26,6 +26,7 @@ private:
 
 signals:
 	void send_message_to_client(const QString&, const QString&);
+	void logout();
 
 private slots:
 	void send_message();
@@ -58,6 +59,7 @@ private:
 
 	QTextEdit *m_message_text;
 	QPushButton *m_send_button;
+	QPushButton *m_logout;
 
 
 	int m_user_count;
