@@ -74,17 +74,23 @@ bool main_client::login(const std::string& u_n,const std::string& u_p)
     // TODO handle write error case
     if (write(m_main_socket, buf, strlen(buf)) < 0) {
     //exception
+        std::cout << "execption in write" <<std::endl;
     //    throw std::runtime_error("Error in login");
-    }
-    else {
-        bzero(buf,sizeof(buf));
-        read(m_main_socket, buf, 256);
-        printf(buf, 256);
-        if (strcmp(buf, "YES")) {
+    } else {
+        char buff[256];
+        bzero(buff,sizeof(buff));
+        if( read(m_main_socket, buff, 256) < 0) {
+                std::cout << "error in read" <<std::endl;
+        }
+        //printf(buff, 256);
+        std::cout << std::endl;
+        if (strcmp(buff, "YES")) {
             return false;
         }
         else {
-            std::thread(give_online_list, m_main_socket).detach();
+            m_online_list_thread = std::thread(give_online_list, m_main_socket);
+            m_online_list_thread.detach();
+            sleep(1);
             return true;
         }   
     }
@@ -98,61 +104,54 @@ bool main_client::logout()
     // TODO handle write error case
     if (write(m_main_socket, buf, strlen(buf)) < 0) {
      //   throw std::runtime_error("Error in logout");
-    }
-    else {
-            read(m_main_socket, buf, 256);
-            printf(buf, 256);
-            if (buf == "YES") {
-                return true;
+    } else {
+            bzero(buf,sizeof(buf));
+            if (read(m_main_socket, buf, 256) < 0) {
+                std::cout << "error in read" <<std::endl;
             }
-            else {
-                    return false;
-                 }   
+            printf(buf, sizeof(buf));
+            std::cout <<std::endl;
+            if (strcmp(buf, "YES")) {
+                return false;
+            } else {
+                std::cout << "raised LOGOUT signal " << std::endl;
+                //std::raise(LOGOUT);
+                m_online_list_thread.~thread();
+                return true;
+            }   
     }
 }
 
 
 void main_client::give_online_list(int s_id) 
 {
+    std::signal(LOGOUT, term);
     while (true) {
-        FILE* fd = fopen("./core/files/ipuser0", "w");
+        FILE* fd = fopen("./core/files/ipuser", "w");
         if (fd == NULL) {
             throw std::runtime_error("Error in open file");
         }
         
-        char buf[4096];
-        write(s_id, "update", strlen("update"));
-        bzero(buf,sizeof(buf));
-        // TODO handle read error case
-        if (read(s_id, buf, 4096) < 0)
-        {
-            std::terminate();
+        char buf1[4096];
+        if (write(s_id, "update", strlen("update")) < 0) {
+        //exception
         }
-        else {
-            printf(buf, 4096);
-            fprintf(fd, "%s\n", buf);
+        bzero(buf1,sizeof(buf1));
+        // TODO handle read error case
+        if (read(s_id, buf1, 4096) < 0) {
+            //exception
+        } else {
+            fprintf(fd, "%s\n", buf1);
         }
         fclose(fd);
         sleep(5);
     }
 }
 
-
-void main_client::give_registered_list()
+void main_client::term(int s)
 {
-    FILE* fd = fopen("./files/regs", "w");
-    if ( fd == NULL) {
-//        throw std::runtime_error("Error in open file");
-    }
-    char buf[4096];
-    sleep(5);
-    bzero(buf,sizeof(buf));
-    // TODO handle read error case
-    if (read(m_main_socket, buf, 4096) < 0) {
-  //      throw std::runtime_error("Error in reading from give_registered_list");
-    }
-    fwrite(buf, sizeof(char), sizeof(buf), fd);
-    fclose(fd);
+    std::cout << "in signal slot" << std::endl;
+    std::terminate();
 }
 
 /*

@@ -62,10 +62,15 @@ bool dispatcher::login(const std::string& u_n, const std::string& u_p)
 
 void dispatcher::logout()
 {
-    m_client->logout();
-    delete serv;
-    serv = NULL;
-    m_clients_list.clear();
+    if(m_client->logout()) {
+        std::cout << "dispatcher logout" <<std::endl;
+        delete serv;
+        serv = NULL;
+        m_clients_list.clear();
+    }
+    else {
+        //   throw std::runtime_error("Error in logout");
+    }
 }
 
 dispatcher::~dispatcher()

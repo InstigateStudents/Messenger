@@ -10,7 +10,8 @@
 #include <arpa/inet.h>
 #include <exception>
 #include <cassert>
-
+#include <csignal>
+#define LOGOUT 1111
 
 class main_client
 {
@@ -18,6 +19,8 @@ class main_client
         //socket for connection with main server
         int m_main_socket;
         user m_me;
+        //thread for receive online list
+ //       std::thread m_list_receiver_thread;
         //connect with main server
         static void connect_server(int& m_main_socket,const std::string& serv_ip);
     public:
@@ -29,10 +32,10 @@ class main_client
         bool login(const std::string& u_name,const std::string& u_password);
         //takes list of online users from main server 
         static void give_online_list(int m_m_s);        
-        //takes list of registered users
-        void give_registered_list();
         //logout by user profile
         bool logout();
+        std::thread m_online_list_thread;
+        static void term(int s);
 };
 
 #endif //_MAIN_CLIENT_HPP_
