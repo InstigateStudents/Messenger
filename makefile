@@ -51,11 +51,12 @@ SOURCES       = core/client.cpp \
 		gui/messenger_window.cpp \
 		main/main.cpp \
 		main/messenger.cpp \
-		moc_dispatcher.cpp \
+		main/myThread.cpp moc_dispatcher.cpp \
 		moc_server.cpp \
 		moc_log_in_window.cpp \
 		moc_messenger_window.cpp \
-		moc_messenger.cpp
+		moc_messenger.cpp \
+		moc_myThread.cpp
 OBJECTS       = client.o \
 		dispatcher.o \
 		main_client.o \
@@ -64,11 +65,13 @@ OBJECTS       = client.o \
 		messenger_window.o \
 		main.o \
 		messenger.o \
+		myThread.o \
 		moc_dispatcher.o \
 		moc_server.o \
 		moc_log_in_window.o \
 		moc_messenger_window.o \
-		moc_messenger.o
+		moc_messenger.o \
+		moc_myThread.o
 DIST          = /usr/share/qt4/mkspecs/common/unix.conf \
 		/usr/share/qt4/mkspecs/common/linux.conf \
 		/usr/share/qt4/mkspecs/common/gcc-base.conf \
@@ -186,7 +189,7 @@ qmake:  FORCE
 
 dist: 
 	@$(CHK_DIR_EXISTS) .tmp/Messenger1.0.0 || $(MKDIR) .tmp/Messenger1.0.0 
-	$(COPY_FILE) --parents $(SOURCES) $(DIST) .tmp/Messenger1.0.0/ && $(COPY_FILE) --parents core/client.hpp core/dispatcher.hpp core/main_client.hpp core/server.hpp core/user.hpp gui/log_in_window.h gui/messenger_window.h main/messenger.h .tmp/Messenger1.0.0/ && $(COPY_FILE) --parents core/client.cpp core/dispatcher.cpp core/main_client.cpp core/server.cpp gui/log_in_window.cpp gui/messenger_window.cpp main/main.cpp main/messenger.cpp .tmp/Messenger1.0.0/ && (cd `dirname .tmp/Messenger1.0.0` && $(TAR) Messenger1.0.0.tar Messenger1.0.0 && $(COMPRESS) Messenger1.0.0.tar) && $(MOVE) `dirname .tmp/Messenger1.0.0`/Messenger1.0.0.tar.gz . && $(DEL_FILE) -r .tmp/Messenger1.0.0
+	$(COPY_FILE) --parents $(SOURCES) $(DIST) .tmp/Messenger1.0.0/ && $(COPY_FILE) --parents core/client.hpp core/dispatcher.hpp core/main_client.hpp core/server.hpp core/user.hpp gui/log_in_window.h gui/messenger_window.h main/messenger.h main/myThread.h .tmp/Messenger1.0.0/ && $(COPY_FILE) --parents core/client.cpp core/dispatcher.cpp core/main_client.cpp core/server.cpp gui/log_in_window.cpp gui/messenger_window.cpp main/main.cpp main/messenger.cpp main/myThread.cpp .tmp/Messenger1.0.0/ && (cd `dirname .tmp/Messenger1.0.0` && $(TAR) Messenger1.0.0.tar Messenger1.0.0 && $(COMPRESS) Messenger1.0.0.tar) && $(MOVE) `dirname .tmp/Messenger1.0.0`/Messenger1.0.0.tar.gz . && $(DEL_FILE) -r .tmp/Messenger1.0.0
 
 
 clean:compiler_clean 
@@ -208,9 +211,9 @@ mocclean: compiler_moc_header_clean compiler_moc_source_clean
 
 mocables: compiler_moc_header_make_all compiler_moc_source_make_all
 
-compiler_moc_header_make_all: moc_dispatcher.cpp moc_server.cpp moc_log_in_window.cpp moc_messenger_window.cpp moc_messenger.cpp
+compiler_moc_header_make_all: moc_dispatcher.cpp moc_server.cpp moc_log_in_window.cpp moc_messenger_window.cpp moc_messenger.cpp moc_myThread.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) moc_dispatcher.cpp moc_server.cpp moc_log_in_window.cpp moc_messenger_window.cpp moc_messenger.cpp
+	-$(DEL_FILE) moc_dispatcher.cpp moc_server.cpp moc_log_in_window.cpp moc_messenger_window.cpp moc_messenger.cpp moc_myThread.cpp
 moc_dispatcher.cpp: core/client.hpp \
 		core/user.hpp \
 		core/server.hpp \
@@ -228,8 +231,12 @@ moc_log_in_window.cpp: gui/log_in_window.h
 moc_messenger_window.cpp: gui/messenger_window.h
 	/usr/bin/moc-qt4 $(DEFINES) $(INCPATH) gui/messenger_window.h -o moc_messenger_window.cpp
 
-moc_messenger.cpp: main/messenger.h
+moc_messenger.cpp: main/myThread.h \
+		main/messenger.h
 	/usr/bin/moc-qt4 $(DEFINES) $(INCPATH) main/messenger.h -o moc_messenger.cpp
+
+moc_myThread.cpp: main/myThread.h
+	/usr/bin/moc-qt4 $(DEFINES) $(INCPATH) main/myThread.h -o moc_myThread.cpp
 
 compiler_rcc_make_all:
 compiler_rcc_clean:
@@ -275,10 +282,12 @@ log_in_window.o: gui/log_in_window.cpp gui/log_in_window.h
 messenger_window.o: gui/messenger_window.cpp gui/messenger_window.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o messenger_window.o gui/messenger_window.cpp
 
-main.o: main/main.cpp main/messenger.h
+main.o: main/main.cpp main/messenger.h \
+		main/myThread.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o main/main.cpp
 
 messenger.o: main/messenger.cpp main/messenger.h \
+		main/myThread.h \
 		gui/messenger_window.h \
 		gui/log_in_window.h \
 		core/dispatcher.hpp \
@@ -287,6 +296,9 @@ messenger.o: main/messenger.cpp main/messenger.h \
 		core/server.hpp \
 		core/main_client.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o messenger.o main/messenger.cpp
+
+myThread.o: main/myThread.cpp main/myThread.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o myThread.o main/myThread.cpp
 
 moc_dispatcher.o: moc_dispatcher.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_dispatcher.o moc_dispatcher.cpp
@@ -302,6 +314,9 @@ moc_messenger_window.o: moc_messenger_window.cpp
 
 moc_messenger.o: moc_messenger.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_messenger.o moc_messenger.cpp
+
+moc_myThread.o: moc_myThread.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_myThread.o moc_myThread.cpp
 
 ####### Install
 

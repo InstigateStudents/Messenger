@@ -96,17 +96,24 @@ void messenger::receive_message(const QString& f, const QString& m)
 
 void messenger::refresh_online_users()
 {
-	std::vector<std::string> v = m_dispatcher->get_onlines();
-    QVector<QString> online;
-    for (std::vector<std::string>::size_type i = 0; i < v.size(); ++i) {
-        online.append(QString::fromUtf8(v[i].c_str()));
-    }
-    m_messenger_window->refresh_show_online_users(online);
+        std::cout<<"start refresh online users" <<std::endl;
+	    std::vector<std::string> v = m_dispatcher->get_onlines();
+        std::cout<< "get_onlines end"<<std::endl;
+        QVector<QString> online;
+        for (std::vector<std::string>::size_type i = 0; i < v.size(); ++i) {
+            online.append(QString::fromUtf8(v[i].c_str()));
+        }
+        std::cout<<"refresh_show_online_users START"<<std::endl;
+        m_messenger_window->refresh_show_online_users(online);
+        std::cout<< "end of refresh online users" <<std::endl;
+        sleep(5);
 }
 
 void messenger::user_logout()
 {
-	m_thread->terminate();
+    my_bool = false;
+	//m_thread->terminate();
 	m_messenger_window->close();
 	m_log_in_window->show();
+    m_dispatcher->logout();
 }

@@ -104,15 +104,3 @@ std::vector<std::string> dispatcher::get_onlines()
     return onlines;
 }
 
-
-/*int main() {
-    dispatcher d;
- //   d.send_to("Gevorg","hasav?");
-    d.registration("Artur","grigoryan");
- //   sleep(5);
- //   d.login("Artur","grigoryan");
- //   sleep(5);
- //   d.logout();
-    while(true);
-    return 0;
-}*/

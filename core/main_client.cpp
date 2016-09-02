@@ -37,23 +37,20 @@ bool main_client::registration(const std::string& u_n,const std::string& u_p)
 {
     assert(!u_n.empty());
     assert(!u_p.empty());
-    std::cout << "in reg" << std::endl;
     char buf[256];
-    bzero(buf,sizeof(buf));
+    bzero(buf, sizeof(buf));
     std::string buffer;
     buffer = std::string("registration?") + u_n + std::string(";") + u_p;
     strcpy(buf,buffer.c_str());
     // TODO handle write error case
     if (write(m_main_socket, buf, strlen(buf)) < 0) {
    //     throw std::runtime_error("Error in registration");
-    }
-    else {
+    } else {
         bzero(buf,sizeof(buf));
         read(m_main_socket, buf, 256);
         if (strcmp(buf, "YES")) {
             return false;
-        }
-        else {
+        } else {
             return true;
         }      
     }
@@ -63,9 +60,7 @@ bool main_client::login(const std::string& u_n,const std::string& u_p)
 {
     assert(!u_n.empty());
     assert(!u_p.empty());
-    std::cout << "in main_client Login" << std::endl;
     m_me.username = u_n;
-    std::cout << "in login" << std::endl;
     char buf[256];
     bzero(buf,sizeof(buf));
     std::string buffer;
@@ -74,7 +69,7 @@ bool main_client::login(const std::string& u_n,const std::string& u_p)
     // TODO handle write error case
     if (write(m_main_socket, buf, strlen(buf)) < 0) {
     //exception
-        std::cout << "execption in write" <<std::endl;
+        std::cout << "exception in write" <<std::endl;
     //    throw std::runtime_error("Error in login");
     } else {
         char buff[256];
@@ -119,7 +114,6 @@ bool main_client::logout()
             }   
     }
 }
-
 
 void main_client::give_online_list(main_client* m_s) 
 { 
