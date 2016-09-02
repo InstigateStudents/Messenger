@@ -2,6 +2,7 @@
 
 main_client::main_client(const std::string& s_i)
 {
+    m_logout_flag = 0;
     m_main_socket = -1;
     assert(!s_i.empty());
     m_main_socket= socket(AF_INET, SOCK_STREAM, 0); 
@@ -82,13 +83,14 @@ bool main_client::login(const std::string& u_n,const std::string& u_p)
         if( read(m_main_socket, buff, 256) < 0) {
                 std::cout << "error in read" <<std::endl;
         }
-        //printf(buff, 256);
+        printf(buff, 256);
         std::cout << std::endl;
         if (strcmp(buff, "YES")) {
             return false;
         }
         else {
-            m_online_list_thread = std::thread(give_online_list, m_main_socket);
+            m_logout_flag = 1;
+            m_online_list_thread = std::thread(give_online_list, this);
             m_online_list_thread.detach();
             sleep(1);
             return true;
@@ -114,45 +116,40 @@ bool main_client::logout()
             if (strcmp(buf, "YES")) {
                 return false;
             } else {
-                std::cout << "raised LOGOUT signal " << std::endl;
-                //std::raise(LOGOUT);
-                m_online_list_thread.~thread();
+                m_logout_flag = 0;
                 return true;
             }   
     }
 }
 
 
-void main_client::give_online_list(int s_id) 
-{
-    std::signal(LOGOUT, term);
-    while (true) {
+void main_client::give_online_list(main_client* m_s) 
+{ 
+    while (m_s->m_logout_flag) {
         FILE* fd = fopen("./core/files/ipuser", "w");
         if (fd == NULL) {
             throw std::runtime_error("Error in open file");
         }
         
-        char buf1[4096];
-        if (write(s_id, "update", strlen("update")) < 0) {
+        char buf[4096];
+        std::cout << "es anasun@ write a anum" <<std::endl;
+        if (write(m_s->m_main_socket, "update", strlen("update")) < 0) {
         //exception
         }
-        bzero(buf1,sizeof(buf1));
+        bzero(buf,sizeof(buf));
         // TODO handle read error case
-        if (read(s_id, buf1, 4096) < 0) {
+        if (read(m_s->m_main_socket, buf, 4096) < 0) {
             //exception
         } else {
-            fprintf(fd, "%s\n", buf1);
+            fprintf(fd, "%s\n", buf);
+            //fprintf(stdout, "online %s", buf);
+            std::cout << std::endl;
         }
         fclose(fd);
         sleep(5);
     }
 }
 
-void main_client::term(int s)
-{
-    std::cout << "in signal slot" << std::endl;
-    std::terminate();
-}
 
 /*
 int main() {

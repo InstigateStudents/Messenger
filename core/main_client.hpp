@@ -11,7 +11,6 @@
 #include <exception>
 #include <cassert>
 #include <csignal>
-#define LOGOUT 1111
 
 class main_client
 {
@@ -19,6 +18,7 @@ class main_client
         //socket for connection with main server
         int m_main_socket;
         user m_me;
+        bool m_logout_flag;
         //thread for receive online list
  //       std::thread m_list_receiver_thread;
         //connect with main server
@@ -31,7 +31,7 @@ class main_client
         //login through username and password   
         bool login(const std::string& u_name,const std::string& u_password);
         //takes list of online users from main server 
-        static void give_online_list(int m_m_s);        
+        static void give_online_list(main_client* m_s);        
         //logout by user profile
         bool logout();
         std::thread m_online_list_thread;

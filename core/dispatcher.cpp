@@ -67,8 +67,10 @@ void dispatcher::logout()
         delete serv;
         serv = NULL;
         m_clients_list.clear();
+        std::cout << "login true" << std::endl;
     }
     else {
+        std::cout << "logout false" << std::endl;
         //   throw std::runtime_error("Error in logout");
     }
 }
