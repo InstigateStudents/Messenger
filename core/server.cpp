@@ -22,6 +22,7 @@ void server::start_server(server* s)
     serv_addr.sin_port = htons(12345);
     serv_addr.sin_addr.s_addr = INADDR_ANY;
     m_read_socket = socket(AF_INET, SOCK_STREAM, 0);
+    s->m_sockets_id.push_back(m_read_socket);
     if (m_read_socket < 0) {
         std::cerr << "Error in creating socket" << std::endl;
  //       throw std::runtime_error("Error in creating socket");
@@ -40,6 +41,7 @@ void server::start_server(server* s)
             std::cerr << "Error in accepting" << std::endl;
       //      throw std::runtime_error("Error in accepting");
         }
+        s->m_sockets_id.push_back(newsocket);
         u_ip = std::to_string(client_addr.sin_addr.s_addr);
         current_user.username = get_username_by_ip(u_ip); 
         current_user.current_ip =u_ip;
@@ -70,6 +72,14 @@ void server::read_message(server* s, user& u)
     }
 }
 
+server::~server()
+{
+    for(std::vector<int>::iterator i = m_sockets_id.begin();
+        i != m_sockets_id.end(); ++i) {
+            close(*i);    
+    }
+    m_sockets_id.clear();
+}
 /*
 
 int main() {

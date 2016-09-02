@@ -61,7 +61,6 @@ bool main_client::registration(const std::string& u_n,const std::string& u_p)
 
 bool main_client::login(const std::string& u_n,const std::string& u_p)
 {
-    
     assert(!u_n.empty());
     assert(!u_p.empty());
     std::cout << "in main_client Login" << std::endl;
@@ -80,15 +79,14 @@ bool main_client::login(const std::string& u_n,const std::string& u_p)
     } else {
         char buff[256];
         bzero(buff,sizeof(buff));
-        if( read(m_main_socket, buff, 256) < 0) {
+        if (read(m_main_socket, buff, 256) < 0) {
                 std::cout << "error in read" <<std::endl;
         }
         printf(buff, 256);
         std::cout << std::endl;
         if (strcmp(buff, "YES")) {
             return false;
-        }
-        else {
+        } else {
             m_logout_flag = 1;
             m_online_list_thread = std::thread(give_online_list, this);
             m_online_list_thread.detach();
@@ -130,9 +128,7 @@ void main_client::give_online_list(main_client* m_s)
         if (fd == NULL) {
             throw std::runtime_error("Error in open file");
         }
-        
         char buf[4096];
-        std::cout << "es anasun@ write a anum" <<std::endl;
         if (write(m_s->m_main_socket, "update", strlen("update")) < 0) {
         //exception
         }
@@ -142,7 +138,7 @@ void main_client::give_online_list(main_client* m_s)
             //exception
         } else {
             fprintf(fd, "%s\n", buf);
-            //fprintf(stdout, "online %s", buf);
+            fprintf(stdout, "online %s", buf);
             std::cout << std::endl;
         }
         fclose(fd);

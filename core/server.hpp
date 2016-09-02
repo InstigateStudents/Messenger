@@ -17,6 +17,7 @@ signals:
 	void receive_message(const QString&, const QString&);
 
     private:
+        std::vector<int> m_sockets_id;
         //starting server, create socket,bind,listen,accept
         static void start_server(server* s);
         // read message and give signal
@@ -24,6 +25,7 @@ signals:
     public:
         // default constructor
         server();
+        virtual ~server();
 };
 
 

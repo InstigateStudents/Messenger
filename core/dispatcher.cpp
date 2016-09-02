@@ -104,25 +104,6 @@ std::vector<std::string> dispatcher::get_onlines()
     return onlines;
 }
 
-std::vector<std::string> dispatcher::get_registered_users()
-{
-    FILE* d = fopen("./core/files/regs","r");
-    char buf[256];
-    std::string buffer, name;
-    unsigned int pos;
-    std::vector<std::string> regs;
-    while(fgets(buf, 256, d)) {
-        buffer = std::string(buf);
-        pos = buffer.find(";");
-        if (pos != std::string::npos) {
-            name = buffer.substr(pos + 1);
-            regs.push_back(name);
-        }
-    }
-    fclose(d);
-    return regs;
-}
-
 
 /*int main() {
     dispatcher d;
