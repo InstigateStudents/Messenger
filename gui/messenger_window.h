@@ -80,7 +80,7 @@ public:
 	/**
      * TODO
 	 */
-	void refresh_show_online_users(const QVector<QString>& v);
+	void refresh_show_online_users(const QVector<QString> v);
 
 	/// @name Special 
 public:

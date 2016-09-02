@@ -1,8 +1,9 @@
 #include "messenger.h"
-
 #include "messenger_window.h"
 #include "log_in_window.h"
 #include "dispatcher.hpp"
+
+#include "myThread.h"
 
 #include <cassert>
 #include <iostream>
@@ -30,10 +31,10 @@ QStringList messenger::fake_list_generator()
     assert(0 != m_dispatcher);
     std::vector<std::string> n = m_dispatcher->get_onlines();
     QStringList l;
-    /*for (unsigned int i = 0; i < n.size(); ++i) {
+    for (unsigned int i = 0; i < n.size(); ++i) {
         l << QString::fromUtf8(n[i].c_str());
-    }*/
-	l << "Art" << "Sash" << "Gev";
+    }
+	//l << "Art" << "Sash" << "Gev";
     return l;
 }
 
@@ -42,8 +43,8 @@ void messenger::login(const QString& u, const QString& p)
     assert(!u.isEmpty());
     assert(!p.isEmpty());
     assert(0 != m_dispatcher);
-    //bool b = m_dispatcher->login(u.toStdString(), p.toStdString()); 
-    if (true) {
+    bool b = m_dispatcher->login(u.toStdString(), p.toStdString()); 
+    if (b) {
 		std::cout<<"messenger.cpp\n";
         assert(0 != m_log_in_window);
         m_log_in_window->hide(); 
@@ -57,14 +58,19 @@ void messenger::login(const QString& u, const QString& p)
 		connect(m_messenger_window, SIGNAL(logout()), this, SLOT(user_logout()));
         assert(0 != m_messenger_window);
         m_messenger_window->show();
+		// --- new ---
+		m_thread = new my_thread();
+		connect(m_thread, SIGNAL(refresh()), this, SLOT(refresh_online_users()));
+		m_thread->start();
     } else {
-        m_log_in_window->show_login_error("Incorrect username or password.");
+        m_log_in_window->show_login_error("Incorrect username/password.");
     }
 }
 
 void messenger::registration(const QString& u, const QString& p)
 {
-	//function of Artur
+	//return value
+	m_dispatcher->registration(u.toStdString(),p.toStdString());
 	std::cout<<"new Account\n";
 	std::cout<<u.toStdString()<<"\t"<<p.toStdString()<<"\n";
 }
@@ -88,8 +94,9 @@ void messenger::receive_message(const QString& f, const QString& m)
 }
 
 
-void messenger::refresh_online_users(const std::vector<std::string>& v)
+void messenger::refresh_online_users()
 {
+	std::vector<std::string> v = m_dispatcher->get_onlines();
     QVector<QString> online;
     for (std::vector<std::string>::size_type i = 0; i < v.size(); ++i) {
         online.append(QString::fromUtf8(v[i].c_str()));
@@ -99,6 +106,7 @@ void messenger::refresh_online_users(const std::vector<std::string>& v)
 
 void messenger::user_logout()
 {
+	m_thread->terminate();
 	m_messenger_window->close();
 	m_log_in_window->show();
 }

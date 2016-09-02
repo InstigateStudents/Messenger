@@ -6,10 +6,11 @@
 
 #include <QObject>
 #include <QStringList>
+#include "myThread.h"
+
 
 class log_in_window;
 class messenger_window;
-
 class dispatcher;
 
 /**
@@ -25,6 +26,7 @@ private:
 	log_in_window* m_log_in_window;
 	messenger_window* m_messenger_window;
 	dispatcher* m_dispatcher;
+	my_thread* m_thread;
 private:
 	QStringList fake_list_generator();
 
@@ -37,7 +39,7 @@ public slots:
 	void registration(const QString& u, const QString& p);
 	void send_to_client(const QString&, const QString&);
 	void receive_message(const QString&, const QString&);
-	void refresh_online_users(const std::vector<std::string>&);
+	void refresh_online_users();
 	void user_logout();
     /// @name Special member functions
 public:
