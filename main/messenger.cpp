@@ -34,7 +34,6 @@ QStringList messenger::list_generator()
     for (unsigned int i = 0; i < n.size(); ++i) {
         l << QString::fromUtf8(n[i].c_str());
     }
-	//l << "Art" << "Sash" << "Gev";
     return l;
 }
 
@@ -71,9 +70,12 @@ void messenger::login(const QString& u, const QString& p)
 void messenger::registration(const QString& u, const QString& p)
 {
 	//return value
-	m_dispatcher->registration(u.toStdString(),p.toStdString());
-	std::cout<<"new Account\n";
-	std::cout<<u.toStdString()<<"\t"<<p.toStdString()<<"\n";
+	bool b = m_dispatcher->registration(u.toStdString(),p.toStdString());
+	if (b) {
+		m_log_in_window->show_registration_result("Registration Completed Successfully");
+	} else {
+		m_log_in_window->show_registration_result("Please make sure that you have entered correct username!!!");
+	}
 }
 
 

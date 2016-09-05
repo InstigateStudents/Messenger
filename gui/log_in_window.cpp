@@ -10,7 +10,7 @@
 #include <QVBoxLayout>
 #include <QErrorMessage>
 #include <unistd.h>
-
+#include <QMessageBox>
 #define HORIZONTAL_MOVE_LIMIT 20
 
 log_in_window::log_in_window(QWidget* p)
@@ -73,7 +73,7 @@ void log_in_window::create_error_layout()
 	m_error_layout->addWidget(m_error_label);
 }
 
-void log_in_window::show_login_error(const QString &s)
+void log_in_window::show_login_error(const QString& s)
 {
 	m_error_label->setAlignment(Qt::AlignRight);
 	m_error_label->setText(s);
@@ -88,6 +88,18 @@ void log_in_window::show_login_error(const QString &s)
 	}
 	move(x,y);
 }
+
+void log_in_window::show_registration_result(const QString& s)
+{
+	QMessageBox* m = new QMessageBox;
+	m->setText(s);
+	m->setStandardButtons(QMessageBox::Ok);
+  	m->setDefaultButton(QMessageBox::Ok);
+	m->show();
+	//m_error_label->setAlignment(Qt::AlignRight);
+	//m_error_label->setText(s);
+}
+
 
 void log_in_window::create_button_layout()
 {

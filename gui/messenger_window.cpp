@@ -19,8 +19,6 @@
 
 #include <QVector>
 #include <cassert>
-#include <QCloseEvent>
-#include <QMessageBox>
 
 messenger_window::messenger_window(const QStringList& l)
     : QDialog()
@@ -125,7 +123,7 @@ void messenger_window::create_right_side()
 void messenger_window::send_message()
 {
 	if ( !(m_message_text->toPlainText().isEmpty()) ) {
-		QString msg = ">>>>\n"+m_message_text->toPlainText()+"\n";
+		QString msg = "->\n"+m_message_text->toPlainText()+"\n";
 		m_user_text_edit[m_current_user]->setTextColor(QColor(0,0,0));
 		m_user_text_edit[m_current_user]->append(msg);
 		//emit
@@ -140,7 +138,7 @@ void messenger_window::receive_message(const QString& f, const QString& m)
 {
 	int index = m_user_name.indexOf(f);
 	m_user_text_edit[index]->setTextColor(QColor(139,0,0));
-	m_user_text_edit[index]->append("<<<<\n" + m + "\n");
+	m_user_text_edit[index]->append("<-\n" + m + "\n");
 	if (m_current_user != index) {
 		m_list_widget_item[index]->setTextColor(QColor(255,0,0));
 	}
@@ -211,15 +209,3 @@ void messenger_window::set_color_black(int i)
 	m_list_widget_item[i]->setTextColor(QColor(0, 0, 0));
 }
 
-void messenger_window::closeEvent (QCloseEvent *event)
-{
-	QMessageBox::StandardButton resBtn = QMessageBox::question(this, "ITC",
-																tr("Are you sure?\n"),
-							 QMessageBox::No | QMessageBox::Yes, QMessageBox::Yes);
-	if (resBtn != QMessageBox::Yes) {
-		event->ignore();
-	} else {
-		emit logout();
-		event->accept();
-	}
-}

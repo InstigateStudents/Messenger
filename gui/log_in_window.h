@@ -58,6 +58,7 @@ public:
      */
     void show_login_error(const QString& s);
 	void clear_login_fields();
+	void show_registration_result(const QString& s);
     /// @name Special member functions
 public:
     /**
