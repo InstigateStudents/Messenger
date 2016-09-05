@@ -71,7 +71,7 @@ void messenger_window::create_left_left_layout()
 void messenger_window::create_left_right_layout()
 {
     m_left_right_layout = new QVBoxLayout;
-    m_send_button = new QPushButton("Send");
+    m_send_button = new QPushButton();
 	QIcon icon("./gui/icons/send.png");
 	m_send_button->setIconSize(QSize(20,30));
 	m_send_button->setIcon(icon);
@@ -95,7 +95,7 @@ void messenger_window::create_right_side()
 	m_right_widget = new QWidget;
 	m_right_layout = new QVBoxLayout;
 	QLabel *ob = new QLabel("<h2><i>ONLINE USERS</i></h2>");
-	m_logout = new QPushButton("log out");
+	m_logout = new QPushButton();
 	QIcon icon("./gui/icons/logout.png");
 	m_logout->setIcon(icon);
 	QHBoxLayout* t = new QHBoxLayout;
