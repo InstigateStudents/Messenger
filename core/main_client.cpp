@@ -45,9 +45,14 @@ bool main_client::registration(const std::string& u_n,const std::string& u_p)
     // TODO handle write error case
     if (write(m_main_socket, buf, strlen(buf)) < 0) {
    //     throw std::runtime_error("Error in registration");
+        std::cout << "exception in write" <<std::endl;
     } else {
         bzero(buf,sizeof(buf));
-        read(m_main_socket, buf, 256);
+        if(read(m_main_socket, buf, 256) < 0) {
+            std::cout << "error in read" <<std::endl;
+    //      throw std::runtime_error("Error in reading");
+        }
+
         if (strcmp(buf, "YES")) {
             return false;
         } else {
@@ -72,14 +77,12 @@ bool main_client::login(const std::string& u_n,const std::string& u_p)
         std::cout << "exception in write" <<std::endl;
     //    throw std::runtime_error("Error in login");
     } else {
-        char buff[256];
-        bzero(buff,sizeof(buff));
-        if (read(m_main_socket, buff, 256) < 0) {
+        bzero(buf,sizeof(buf));
+        if (read(m_main_socket, buf, 256) < 0) {
+    //          throw std::runtime_error("Error in reading");
                 std::cout << "error in read" <<std::endl;
         }
-        printf(buff, 256);
-        std::cout << std::endl;
-        if (strcmp(buff, "YES")) {
+        if (strcmp(buf, "YES")) {
             return false;
         } else {
             m_logout_flag = 1;
@@ -102,10 +105,9 @@ bool main_client::logout()
     } else {
             bzero(buf,sizeof(buf));
             if (read(m_main_socket, buf, 256) < 0) {
+           //   throw std::runtime_error("Error in reading");
                 std::cout << "error in read" <<std::endl;
             }
-            printf(buf, sizeof(buf));
-            std::cout <<std::endl;
             if (strcmp(buf, "YES")) {
                 return false;
             } else {
