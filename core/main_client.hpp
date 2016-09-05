@@ -17,10 +17,10 @@ class main_client
     private :
         //socket for connection with main server
         int m_main_socket;
+        //information about current logged user
         user m_me;
+        //flag checking logout
         bool m_logout_flag;
-        //thread for receive online list
- //       std::thread m_list_receiver_thread;
         //connect with main server
         static void connect_server(int& m_main_socket,const std::string& serv_ip);
     public:
@@ -34,8 +34,6 @@ class main_client
         static void give_online_list(main_client* m_s);        
         //logout by user profile
         bool logout();
-        std::thread m_online_list_thread;
-        static void term(int s);
 };
 
 #endif //_MAIN_CLIENT_HPP_

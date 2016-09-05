@@ -86,8 +86,7 @@ bool main_client::login(const std::string& u_n,const std::string& u_p)
             return false;
         } else {
             m_logout_flag = 1;
-            m_online_list_thread = std::thread(give_online_list, this);
-            m_online_list_thread.detach();
+            std::thread(give_online_list, this).detach();
             sleep(1);
             return true;
         }   
@@ -134,22 +133,9 @@ void main_client::give_online_list(main_client* m_s)
             //exception
         } else {
             fprintf(fd, "%s\n", buf);
-            fprintf(stdout, "online %s", buf);
-            std::cout << std::endl;
         }
         fclose(fd);
         sleep(5);
     }
 }
 
-
-/*
-int main() {
-    main_client c("192.168.68.111");
-    c.registration("Artur","Grigoryan");
-    c.login("Artur","Grigoryan");
-    c.logout();
-    //    c.give_online_list();
-    while(true);
-    return 0;
-}*/
