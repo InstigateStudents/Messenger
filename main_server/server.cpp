@@ -72,30 +72,35 @@ bool Server::user_register (Server* server, std::string usr, std::string pswd)
 	server->m_users[usr].IP = "*";
 	return true;
 }
+
 //Updates the database according to the map.
 void Server::update_file(Server* server)
 {
-	while(true) {
+	while (true) {
 		FILE * filename = fopen("../dtb/user_list.txt","w");
-			for(std::map<std::string, user_info>::iterator it = server->m_users.begin(); it != server->m_users.end(); ++it){
-				std::string usr = it->first;
-				fputs ((usr + ' ' + server->m_users[usr].m_pswd + "\n").c_str(), filename);
-			}
+        std::map<std::string, user_info>::iterator it = server->m_users.begin();
+        for (; it != server->m_users.end(); ++it){
+            std::string usr = it->first;
+            fputs((usr + ' ' + server->m_users[usr].m_pswd + "\n").c_str(),
+                    filename);
+        }
 		fclose(filename);
 		sleep(1);
 	}
 }
+
 //List of all online users.
 void Server::update_online_file(Server* s)
 {
 	while(true) {
 		FILE * filename = fopen("../dtb/online_user_list.txt","w");
-			for(std::map<std::string, user_info>::iterator it = s->m_users.begin(); it != s->m_users.end(); ++it){
-				std::string usr = it->first;
-				if(s->m_users[usr].IP != "*") {
-					fputs ((usr + ' ' + s->m_users[usr].IP + "\n").c_str(), filename);
-				}
-			}
+        std::map<std::string, user_info>::iterator it = s->m_users.begin();
+        for (; it != s->m_users.end(); ++it){
+            std::string usr = it->first;
+            if(s->m_users[usr].IP != "*") {
+                fputs ((usr + ' ' + s->m_users[usr].IP + "\n").c_str(), filename);
+            }
+        }
 		fclose(filename);
 		// parser function that returns string
 		std::string r = s->parse(s->m_users);

@@ -59,12 +59,4 @@ static std::string get_ip_by_username(std::string u_name) {
     return NULL; 
 }
 
-/*
-   int main() {
-   std::string s = get_username_by_ip("192.168.68.105");
-   std::cout << s <<std::endl;
-   return 0;
-   }
- */
-
 #endif //_USER_HPP_

@@ -106,7 +106,6 @@ void messenger::refresh_online_users()
         std::cout<<"refresh_show_online_users START"<<std::endl;
         m_messenger_window->refresh_show_online_users(online);
         std::cout<< "end of refresh online users" <<std::endl;
-        sleep(5);
 }
 
 void messenger::user_logout()
