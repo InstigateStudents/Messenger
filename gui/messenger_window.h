@@ -15,6 +15,7 @@ class QLabel;
 class QListWidget;
 class QListWidgetItem;
 class QStackedLayout;
+class QCloseEvent; 
 
 class messenger_window : public QDialog
 {
@@ -32,6 +33,9 @@ private slots:
 	void send_message();
 	void set_color_black(int);
 	void set_current_user(int = 0);
+
+protected:
+	void closeEvent (QCloseEvent*);
 
 private:
 	void create_main_layout();
