@@ -11,6 +11,16 @@
 #include <exception>
 #include <string.h>
 #include <fstream>
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <errno.h>
+#include <pwd.h>
+#include <signal.h>
+#include <sys/mman.h>
+
 class main_server
 {
 private:
@@ -72,6 +82,8 @@ public:
 	*@param A pointer to a main_server object who's map is going to be used to determine online users.
 	*/
 	static void update_online_users(main_server*);
+	
+	static void remove_offline_user(main_server*,const std::string& IP);	
 public:
 	/**
 	*Constructor for main_server object. Reads the contents of a database and fills the map with it.
