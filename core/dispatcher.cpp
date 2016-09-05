@@ -1,11 +1,11 @@
 #include "dispatcher.hpp"
 
-dispatcher::dispatcher(const std::string& i)
+dispatcher::dispatcher()
 {
-    assert(!i.empty());
+    std::string ip = read_main_server_ip();
     m_client = NULL;
     serv = NULL;
-    m_client = new main_client(i);
+    m_client = new main_client(ip);
     serv = new server;
     connect(serv,SIGNAL(receive_message(const QString&, const QString&)),
             this, SIGNAL(new_message(const QString&, const QString&)),
@@ -89,3 +89,15 @@ std::vector<std::string> dispatcher::get_onlines()
     return onlines;
 }
 
+std::string dispatcher::read_main_server_ip()
+{
+    char buf[256];
+    std::string line;
+    int pos;
+    FILE* fd = fopen("./config", "r");
+    if (fgets(buf, 256, fd)) {
+        line = std::string(buf);
+        pos = line.find(":");
+    }
+    return line.substr(pos+1);
+}
