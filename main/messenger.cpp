@@ -26,7 +26,7 @@ void messenger::run()
     m_log_in_window->show();
 }
 
-QStringList messenger::fake_list_generator()
+QStringList messenger::list_generator()
 {   
     assert(0 != m_dispatcher);
     std::vector<std::string> n = m_dispatcher->get_onlines();
@@ -49,8 +49,9 @@ void messenger::login(const QString& u, const QString& p)
         assert(0 != m_log_in_window);
         m_log_in_window->hide(); 
 	    m_log_in_window->clear_login_fields();	
-        QStringList l = fake_list_generator(); 
+        QStringList l = list_generator(); 
         m_messenger_window = new messenger_window(l);
+		refresh_online_users();
         connect(m_messenger_window,
                 SIGNAL(send_message_to_client(const QString&, const QString&)),
                 this,
@@ -96,22 +97,18 @@ void messenger::receive_message(const QString& f, const QString& m)
 
 void messenger::refresh_online_users()
 {
-        std::cout<<"start refresh online users" <<std::endl;
+        //std::cout<<"start refresh online users" <<std::endl;
 	    std::vector<std::string> v = m_dispatcher->get_onlines();
-        std::cout<< "get_onlines end"<<std::endl;
         QVector<QString> online;
         for (std::vector<std::string>::size_type i = 0; i < v.size(); ++i) {
             online.append(QString::fromUtf8(v[i].c_str()));
         }
-        std::cout<<"refresh_show_online_users START"<<std::endl;
         m_messenger_window->refresh_show_online_users(online);
-        std::cout<< "end of refresh online users" <<std::endl;
 }
 
 void messenger::user_logout()
 {
-    my_bool = false;
-	//m_thread->terminate();
+	m_thread->terminate();
 	m_messenger_window->close();
 	m_log_in_window->show();
     m_dispatcher->logout();

@@ -27,9 +27,8 @@ private:
 	messenger_window* m_messenger_window;
 	dispatcher* m_dispatcher;
 	my_thread* m_thread;
-	bool my_bool;
 private:
-	QStringList fake_list_generator();
+	QStringList list_generator();
 
     /// @name Connection setup and functionality
 public:

@@ -165,7 +165,7 @@ void messenger_window::refresh_show_online_users(const QVector<QString>& o)
 			QListWidgetItem* a = new QListWidgetItem;
 			//QIcon icon("./gui/icons/user.png");
 			//a->setIcon(icon);
-			a->setText(m_user_name[i]);
+			a->setText(m_user_name[q]);
 			a->setSizeHint(QSize(50,50));
 			a->setHidden(false);
 			m_list_widget_item.push_back(a);

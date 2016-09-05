@@ -21,8 +21,8 @@ class messenger_window : public QDialog
 	Q_OBJECT
 
 private:
-        typedef QVector<QTextEdit*> Text_Edit_Container;
-        typedef QVector<QListWidgetItem*> Widget_Item_Container;
+	typedef QVector<QTextEdit*> Text_Edit_Container;
+    typedef QVector<QListWidgetItem*> Widget_Item_Container;
 
 signals:
 	void send_message_to_client(const QString&, const QString&);
@@ -43,30 +43,21 @@ private:
 
 private:
 	QHBoxLayout *m_main_layout;
-
 	QWidget *m_left_widget;
 	QHBoxLayout *m_left_layout;
 	QVBoxLayout *m_left_left_layout;
 	QLabel *m_current_user_name;
 	QStackedLayout *m_message_board;
-	//QTextEdit *m_user_text_edit;
-	 Text_Edit_Container  m_user_text_edit;
-
+	Text_Edit_Container  m_user_text_edit;
 	QVBoxLayout *m_left_right_layout;
-
 	QWidget *m_right_widget;
 	QVBoxLayout *m_right_layout;
-
 	QTextEdit *m_message_text;
 	QPushButton *m_send_button;
 	QPushButton *m_logout;
-
-
 	int m_user_count;
 	int m_current_user;
 	QStringList m_user_name;
-
-
 	QListWidget *m_online_users;
 	Widget_Item_Container 	m_list_widget_item;
 
