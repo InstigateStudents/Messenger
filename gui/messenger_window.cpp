@@ -19,6 +19,8 @@
 
 #include <QVector>
 #include <cassert>
+#include <QCloseEvent>
+#include <QMessageBox>
 
 messenger_window::messenger_window(const QStringList& l)
     : QDialog()
@@ -72,9 +74,9 @@ void messenger_window::create_left_right_layout()
 {
     m_left_right_layout = new QVBoxLayout;
     m_send_button = new QPushButton("Send");
-	//QIcon icon("./gui/icons/send.png");
-	//m_send_button->setIconSize(QSize(20,30));
-	//m_send_button->setIcon(icon);
+	QIcon icon("./gui/icons/send.png");
+	m_send_button->setIconSize(QSize(20,30));
+	m_send_button->setIcon(icon);
     m_left_right_layout->addStretch();
     m_left_right_layout->addWidget(m_send_button);
 }
@@ -96,8 +98,8 @@ void messenger_window::create_right_side()
 	m_right_layout = new QVBoxLayout;
 	QLabel *ob = new QLabel("<h2><i>ONLINE USERS</i></h2>");
 	m_logout = new QPushButton("log out");
-	//QIcon icon("./gui/icons/logout.png");
-	//m_logout->setIcon(icon);
+	QIcon icon("./gui/icons/logout.png");
+	m_logout->setIcon(icon);
 	QHBoxLayout* t = new QHBoxLayout;
 	t->addWidget(ob);
 	t->addStretch();
@@ -110,8 +112,8 @@ void messenger_window::create_right_side()
 	}
 	assert(m_list_widget_item.size() == m_user_count);
 	for (int i = 0; i < m_user_count; ++i) {
-		//QIcon icon("./gui/icons/user.png");
-		//m_list_widget_item[i]->setIcon(icon);
+		QIcon icon("./gui/icons/user.png");
+		m_list_widget_item[i]->setIcon(icon);
 		m_list_widget_item[i]->setText(m_user_name[i]);
 		m_list_widget_item[i]->setSizeHint(QSize(50, 50));
 		m_online_users->addItem(m_list_widget_item[i]);
@@ -163,8 +165,8 @@ void messenger_window::refresh_show_online_users(const QVector<QString>& o)
 			int q = m_user_text_edit.size()-1;
 			m_message_board->addWidget(m_user_text_edit[q]);
 			QListWidgetItem* a = new QListWidgetItem;
-			//QIcon icon("./gui/icons/user.png");
-			//a->setIcon(icon);
+			QIcon icon("./gui/icons/user.png");
+			a->setIcon(icon);
 			a->setText(m_user_name[q]);
 			a->setSizeHint(QSize(50,50));
 			a->setHidden(false);
@@ -209,3 +211,15 @@ void messenger_window::set_color_black(int i)
 	m_list_widget_item[i]->setTextColor(QColor(0, 0, 0));
 }
 
+void messenger_window::closeEvent (QCloseEvent *event)
+{
+	QMessageBox::StandardButton resBtn = QMessageBox::question(this, "ITC",
+																tr("Are you sure?\n"),
+							 QMessageBox::No | QMessageBox::Yes, QMessageBox::Yes);
+	if (resBtn != QMessageBox::Yes) {
+		event->ignore();
+	} else {
+		emit logout();
+		event->accept();
+	}
+}

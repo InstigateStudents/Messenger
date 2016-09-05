@@ -64,7 +64,7 @@ void messenger::login(const QString& u, const QString& p)
 		connect(m_thread, SIGNAL(refresh()), this, SLOT(refresh_online_users()));
 		m_thread->start();
     } else {
-        m_log_in_window->show_login_error("Incorrect username/password.");
+        m_log_in_window->show_login_error("<font color=red>Incorrect username/password.</font>");
     }
 }
 
