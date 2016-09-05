@@ -3,6 +3,8 @@
 //Constructor for class server. Fills the map with info from the database.
 main_server::main_server()
 {
+	std::cout << "SERVER STARTED.." << std::endl;
+	signal(SIGPIPE, SIG_IGN); 
 	int a;
 	std::string l;
 	std::string u;
@@ -22,7 +24,6 @@ main_server::main_server()
 			}
 			m_users[u].m_password = p;
 			m_users[u].m_IP = "*";
-			std::cout << u << ' ' << p << std::endl;	
 			u = "";
 			p = "";
 		}      
@@ -46,7 +47,7 @@ std::string main_server::parse(std::map<std::string, user_info> mp)
 //Checks if the given password is correct, and stores the IP address. 
 bool main_server::user_login (main_server* server, const std::string user, const std::string password, const std::string IP)
 {
-	std::cout << "Login " << user << " " << password << std::endl;
+	std::cout << "User:" << user << " is logging in "  << std::endl;
 	if(server->m_users.count(user) == 0){
 		return false;
 	}
@@ -59,13 +60,13 @@ bool main_server::user_login (main_server* server, const std::string user, const
 //Deletes the user's IP and marks him as offline.
 void main_server::user_logout (main_server* server, const std::string user)
 {
-	std::cout << "Logout " << user << " " << std::endl;
+	std::cout << "User: " << user << " is logging out " << std::endl;
 	server->m_users[user].m_IP = "*";
 }
 //Creates a new record in the database with the given username and password.
 bool main_server::user_register (main_server* server, const std::string user, const std::string password)
 {
-	std::cout << "Register " << user << " " << password << std::endl;
+	std::cout << "User " << user << " successfully registred " << std::endl;
 	if(server->m_users.count(user) == 1){
 		return false;
 	}
@@ -107,7 +108,6 @@ void main_server::send_to(int m, const std::string& r)
 {
 	char buf[1024];
 	strcpy(buf,r.c_str()); //incorrect =
-	printf(buf,strlen(buf));
 	if(write(m, buf, strlen(buf)) < 0 ){
             	std::cerr << "Error in writing" << std::endl;
     }
@@ -147,14 +147,16 @@ void main_server::run()
 	}
 }
 
+
 //Parses the given command and calls the appropriate function.
 void main_server::recieve_command(main_server* server, int socket, const std::string IP)
 {
 	char buf[256];
 	while(true){
 		bzero(buf,sizeof(buf));
-		if(read(socket, buf, 256) < 0){
-			std::cerr << "Error in reading" << std::endl;
+		if(read(socket, buf, 256) <= 0){
+			remove_offline_user(server,IP);
+			return;
 		}
 		std::string s = std::string(buf);
 		std::string c, u, p;
@@ -190,7 +192,20 @@ void main_server::recieve_command(main_server* server, int socket, const std::st
 			user_logout (server, u);
 			write(socket,"YES",strlen("YES"));
 		}
-		else 
+		else {
 			write(socket,"NO",strlen("NO"));	
+		}
+	}
+}
+
+
+
+
+void main_server::remove_offline_user(main_server* serv, const std::string& IP)
+{
+	for(std::map<std::string, user_info>::iterator it = serv->m_users.begin(); it != serv->m_users.end(); ++it) {
+		if(it->second.m_IP == IP) {
+			it->second.m_IP = "*";
+		}
 	}
 }
