@@ -24,12 +24,10 @@ void server::start_server(server* s)
     m_read_socket = socket(AF_INET, SOCK_STREAM, 0);
     s->m_sockets_id.push_back(m_read_socket);
     if (m_read_socket < 0) {
-        std::cerr << "Error in creating socket" << std::endl;
- //       throw std::runtime_error("Error in creating socket");
+        throw std::runtime_error("Error in creating socket");
     }
     if (bind(m_read_socket,(sockaddr *)&serv_addr, sizeof(serv_addr)) < 0) {
-        std::cerr << "Error in binding" << std::endl;
-    //    throw std::runtime_error("Error in binding");
+        throw std::runtime_error("Error in binding");
     }
     listen(m_read_socket,5);
     clientlength = sizeof(client_addr);
@@ -38,8 +36,7 @@ void server::start_server(server* s)
         newsocket = accept(m_read_socket,(sockaddr *)&client_addr,
                 &clientlength);
         if (!newsocket) {
-            std::cerr << "Error in accepting" << std::endl;
-      //      throw std::runtime_error("Error in accepting");
+            throw std::runtime_error("Error in accepting");
         }
         s->m_sockets_id.push_back(newsocket);
         u_ip = std::to_string(client_addr.sin_addr.s_addr);

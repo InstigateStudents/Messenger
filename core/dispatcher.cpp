@@ -56,7 +56,7 @@ void dispatcher::logout()
         m_clients_list.clear();
     }
     else {
-        //   throw std::runtime_error("Error in logout");
+           throw std::runtime_error("Error in logout");
     }
 }
 
