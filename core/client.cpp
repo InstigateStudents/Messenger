@@ -23,9 +23,6 @@ void client::start_communication(user& p)
     if (connect(p.current_socket, (sockaddr *)&pair_addr, sizeof(pair_addr)) < 0) {
         std::cerr << "Error in connection" << std::endl;
     }
-    else {
-        std::cout << "connected" <<std::endl;
-    }
 }
 
 void client::send_message(const std::string& m)
@@ -45,10 +42,3 @@ user client::get_pair()
     return pair;
 }
 
-
-/* 
-int main() {
-    client a("Gevorg");
-    return 0;
-}
-*/

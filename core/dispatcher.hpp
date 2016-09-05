@@ -20,7 +20,7 @@ private:
     typedef std::vector<std::string> users;
 
 private:
-    // list of users
+    //vector for connected clients
     clients m_clients_list;
     // pointer to main client object
     main_client* m_client;
@@ -29,6 +29,7 @@ private:
 
     // @name slots for signals
 signals:
+    //signal for GUI when receiving message
 	void new_message(const QString&, const QString&);
 
 public:

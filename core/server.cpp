@@ -63,7 +63,6 @@ void server::read_message(server* s, user& u)
 	    	QString m  = QString::fromStdString(buffer);	
 	
             emit s->receive_message(to, m);
-		//std::cout << "Message from " << u.username << buffer << std::flush;
         }
         else {
             u.current_socket = -1;
@@ -80,11 +79,3 @@ server::~server()
     }
     m_sockets_id.clear();
 }
-/*
-
-int main() {
-
-    server s;
-    return 0;
-}
-*/

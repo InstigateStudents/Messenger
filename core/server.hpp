@@ -12,20 +12,21 @@
 class server: public QObject
 {
 	Q_OBJECT
-//signal for receive_messages
 signals:
-	void receive_message(const QString&, const QString&);
+    //signal for receive_messages
+    void receive_message(const QString&, const QString&);
 
-    private:
-        std::vector<int> m_sockets_id;
-        //starting server, create socket,bind,listen,accept
-        static void start_server(server* s);
-        // read message and give signal
-        static void read_message(server* s, user& u);
-    public:
-        // default constructor
-        server();
-        virtual ~server();
+private:
+    //vector for opened sockets
+    std::vector<int> m_sockets_id;
+    //starting server, create socket,bind,listen,accept
+    static void start_server(server* s);
+    // read message and give signal
+    static void read_message(server* s, user& u);
+public:
+    // default constructor
+    server();
+    ~server();
 };
 
 
