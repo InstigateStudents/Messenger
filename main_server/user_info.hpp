@@ -5,7 +5,7 @@
 
 struct user_info {
 	std::string m_password;
-	std::string m_IP;
+	std::string m_ip;
 	user_info();
 };
 

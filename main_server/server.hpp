@@ -25,8 +25,10 @@
 class main_server
 {
 private:
+	typedef std::map<std::string, user_info> user_name_to_info;
+private:
 	int m_master_socket;
-	std::map<std::string, user_info> m_users;
+	user_name_to_info m_users;
 private:
 	/**
 	 * This function is automatically called when a server instance is created.
@@ -88,7 +90,7 @@ public:
 	 * that can be transfered to the client.
 	 * @param The original map
 	 */
-	std::string parse(std::map<std::string, user_info> mp);
+	std::string parse(user_name_to_info mp);
 
 	/**
 	 * Updates the database every 5 seconds
