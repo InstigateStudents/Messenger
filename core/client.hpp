@@ -13,14 +13,18 @@
 
 class client
 {
-    private:
-        user pair;
-        static void start_communication(user& p);
-    public:
-        client(const std::string& u_name);
-        user get_pair();
-        void send_message(const std::string& message);
+private:
+    //user we want to connect
+    user pair;
+    //connection start
+    static void start_communication(user& p);
+public:
+    //constructor, receives as argument the user for connecting
+    client(const std::string& u_name);
+    //returns pair
+    user get_pair();
+    //function for sending message, receives as argument username and message text
+    void send_message(const std::string& message);
 };
-
 
 #endif //_CLIENT_HPP_

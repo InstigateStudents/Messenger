@@ -20,20 +20,17 @@ void dispatcher::send_to(const std::string& u_n, const std::string& m)
     for (clients::iterator i = m_clients_list.begin(); i != m_clients_list.end(); ++i) {
         if (i->get_pair().username == u_n) {
             i->send_message(m);
-            std::cout << "after sending"  <<std::endl;
             return;
         }
     }
     m_clients_list.push_back(client(u_n));
     (m_clients_list.end() - 1)->send_message(m);
-    std::cout << "after sending" << std::endl;
 }
 
 void dispatcher::clear_clients_list()
 {
       for (std::vector<client>::iterator i = m_clients_list.begin(); i != m_clients_list.end(); i++) {
         if (i->get_pair().current_socket == -1) {
-            std::cout << "\n deleted user" << i->get_pair().username <<std::endl;
             m_clients_list.erase(i);
         }
     }
@@ -56,12 +53,9 @@ bool dispatcher::login(const std::string& u_n, const std::string& u_p)
 void dispatcher::logout()
 {
     if(m_client->logout()) {
-        std::cout << "dispatcher logout" <<std::endl;
         m_clients_list.clear();
-        std::cout << "login true" << std::endl;
     }
     else {
-        std::cout << "logout false" << std::endl;
         //   throw std::runtime_error("Error in logout");
     }
 }
