@@ -44,7 +44,6 @@ void messenger::login(const QString& u, const QString& p)
     assert(0 != m_dispatcher);
     bool b = m_dispatcher->login(u.toStdString(), p.toStdString()); 
     if (b) {
-		std::cout<<"messenger.cpp\n";
         assert(0 != m_log_in_window);
         m_log_in_window->hide(); 
 	    m_log_in_window->clear_login_fields();	
@@ -99,7 +98,6 @@ void messenger::receive_message(const QString& f, const QString& m)
 
 void messenger::refresh_online_users()
 {
-        //std::cout<<"start refresh online users" <<std::endl;
 	    std::vector<std::string> v = m_dispatcher->get_onlines();
         QVector<QString> online;
         for (std::vector<std::string>::size_type i = 0; i < v.size(); ++i) {
