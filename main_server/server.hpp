@@ -22,6 +22,10 @@
 #include <signal.h>
 #include <sys/mman.h>
 
+/**
+ * @brief main_server
+ *  
+ */
 class main_server
 {
 private:
@@ -40,13 +44,12 @@ private:
 public:
 	/**
 	 * Sends the list of all online users to all online users once.
-	 * @param A pointer to a main_server object who's map is used to get the
-	 * online users.
-	 * @param The string that must be sent to all online clients. It contains
-	 * all the online users and their addresses in correct format(It can be taken
-	 * from parse).
+     * @param i - socket to which the list will sent
+     * @param s - The string that must be sent to all online clients. It
+     * contains all the online users and their addresses in correct format.
+     * This string is built with parse function.
 	 */
-	static void send_to(int, const std::string&);
+	static void send_to(int i, const std::string& s);
 
 	/**
 	 * Checks if the username and password match. If they do it marks that
@@ -56,7 +59,7 @@ public:
 	 * @param The password.
 	 * @param The address from which the command was sent.
 	 */
-	static bool user_login(main_server*, const std::string, const std::string, const std::string);
+	static bool user_login(main_server*, const std::string&, const std::string&, const std::string&);
 
 	/**
 	 * Marks the user as offline and deletes the person's address from the map.
@@ -64,16 +67,18 @@ public:
 	 * @param The username of the person wishing to logout.
 	 * @param His password.
 	 */
-	static void user_logout(main_server*, const std::string);
+	static void user_logout(main_server*, const std::string&);
 
 	/**
 	 * Checks if the username is taken and creates a new record of a person
 	 * with the given username and password.
-	 * @param A pointer to a main_server object who's map is going to be changed.
+     * @param A pointer to a main_server object who's map is going to be
+     * changed.
 	 * @param The desired username.
 	 * @param It's password
 	 */
-	static bool user_register(main_server*, const std::string, const std::string);
+	static bool user_register(main_server*, const std::string&,
+            const std::string&);
 
 	/**
 	 * Reads the client's input, calls the appropriate command function
@@ -83,14 +88,14 @@ public:
 	 * @param Client's socket.
 	 * @param IP address of the client.
 	 */
-	static void recieve_command(main_server*, int, const std::string);
+	static void recieve_command(main_server*, int, const std::string&);
 
 	/**
 	 * Turns a map of users into a string of online users and their addresses
 	 * that can be transfered to the client.
 	 * @param The original map
 	 */
-	std::string parse(user_name_to_info mp);
+	std::string parse(user_name_to_info);
 
 	/**
 	 * Updates the database every 5 seconds
@@ -107,7 +112,7 @@ public:
 	 */
 	static void update_online_users(main_server*);
 	
-	static void remove_offline_user(main_server*,const std::string& IP);	
+	static void remove_offline_user(main_server*,const std::string&);	
 public:
 	/**
 	 * Constructor for main_server object. Reads the contents of a database and

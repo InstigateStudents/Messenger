@@ -3,15 +3,30 @@ This is the README file of the Messenger project
 1. INTRODUCTION
 2. BUILD
 3. USAGE
+4. KNOWN ISSUES
 
 1. INTRODUCTION
-TODO: describe the project
+This is a tool for communication in local network.  GUI is provided to the user
+for messaging. Before messaging the users need to register. The registration
+process is handled by the main server which is a seperate application that
+should run. The messenger should be configured to connect to the main server.
+Before starting the Messenger GUI application edit "config" file in the
+following way:
+
+main server ip:192.168.68.131
 
 2. BUILD
-make
-
-3. USAGE
+make - to build the messenger
+make server - to build the main server
+make clean - to clean the project 3. USAGE
 a) run the main server
 ./main_server
 b) run the messenger
-./messenger
+./Messenger
+
+4. KNOWN ISSUES
+The application doesn't have an icon.
+The zoom in/zoom out functionality requires improvement.
+The messenger doesn't warn of the user's wrong input - user name containing ";"
+symbol. The user name is created with the specified string till ";" symbol.
+When a user loses connection other users are not warned.
