@@ -1,5 +1,0 @@
-git mv src/main.cpp       main.cpp       
-git mv src/server.cpp     server.cpp
-git mv src/server.hpp     server.hpp
-git mv src/user_info.cpp  user_info.cpp
-git mv src/user_info.hpp  user_info.hpp
