@@ -22,6 +22,10 @@
 #include <signal.h>
 #include <sys/mman.h>
 
+/**
+ * @brief main_server
+ *  
+ */
 class main_server
 {
 private:
@@ -40,13 +44,12 @@ private:
 public:
 	/**
 	 * Sends the list of all online users to all online users once.
-	 * @param A pointer to a main_server object who's map is used to get the
-	 * online users.
-	 * @param The string that must be sent to all online clients. It contains
-	 * all the online users and their addresses in correct format(It can be taken
-	 * from parse).
+     * @param i - socket to which the list will sent
+     * @param s - The string that must be sent to all online clients. It
+     * contains all the online users and their addresses in correct format.
+     * This string is built with parse function.
 	 */
-	static void send_to(int, const std::string&);
+	static void send_to(int i, const std::string& s);
 
 	/**
 	 * Checks if the username and password match. If they do it marks that
@@ -69,11 +72,13 @@ public:
 	/**
 	 * Checks if the username is taken and creates a new record of a person
 	 * with the given username and password.
-	 * @param A pointer to a main_server object who's map is going to be changed.
+     * @param A pointer to a main_server object who's map is going to be
+     * changed.
 	 * @param The desired username.
 	 * @param It's password
 	 */
-	static bool user_register(main_server*, const std::string, const std::string);
+	static bool user_register(main_server*, const std::string&,
+            const std::string&);
 
 	/**
 	 * Reads the client's input, calls the appropriate command function

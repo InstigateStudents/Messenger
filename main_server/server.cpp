@@ -74,13 +74,14 @@ void main_server::user_logout (main_server* s, const std::string& u)
 	s->m_users[u].m_ip = "*";
 }
 
-bool main_server::user_register (main_server* s, const std::string u, const std::string p)
+bool main_server::user_register(main_server* s, const std::string& u,
+        const std::string& p)
 {
     assert(0 != s);
-    assert (!u.empty());
-    assert (!p.empty());
-	std::cout << "User " << u << " successfully registred " << std::endl;
-	if (s->m_users.count(u) == 1){
+    assert(!u.empty());
+    assert(!p.empty());
+	std::cout << "User " << u << " successfully registered " << std::endl;
+	if (1 == s->m_users.count(u)) {
 		return false;
 	}
 	s->m_users[u].m_password = p;
@@ -90,19 +91,20 @@ bool main_server::user_register (main_server* s, const std::string u, const std:
 
 void main_server::update_file(main_server* s)
 {
-	while (true){
+    assert(0 != s);
+	while (true) {
 		std::string p = g_path + "/user_list.txt";
-		FILE * filename = fopen(p.c_str() ,"w");
-        if ( filename == NULL ) {
+		FILE* f = fopen(p.c_str(), "w");
+        if (f == NULL) {
             std::cerr << "Can't open file " << std:: endl;
             exit(1);
         }
 	    user_name_to_info::iterator i = s->m_users.begin();
         for (; i != s->m_users.end(); ++i){
             std::string u = i->first;
-            fputs ((u + ' ' + s->m_users[u].m_password + "\n").c_str(), filename);
+            fputs((u + ' ' + s->m_users[u].m_password + "\n").c_str(), f);
         }
-		fclose(filename);
+		fclose(f);
 		sleep(1);
 	}
 }
@@ -133,7 +135,7 @@ void main_server::send_to(int m, const std::string& r)
 {
     assert (!r.empty());
 	char buf[1024];
-	strcpy(buf,r.c_str());
+	strcpy(buf, r.c_str());
 	if (write(m, buf, strlen(buf)) < 0 ){
             	std::cerr << "Error in writing" << std::endl;
     } else {
@@ -144,8 +146,8 @@ void main_server::send_to(int m, const std::string& r)
 void main_server::run()
 {
 	m_master_socket = socket(AF_INET, SOCK_STREAM, 0);
-	std::thread(main_server::update_file,this).detach();
-	std::thread(main_server::update_online_users,this).detach();
+	std::thread(main_server::update_file, this).detach();
+	std::thread(main_server::update_online_users, this).detach();
 	int n;
 	sockaddr_in serv_addr, client_addr;
 	socklen_t clientlength;

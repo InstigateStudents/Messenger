@@ -11,8 +11,8 @@
 CC            = gcc
 CXX           = g++
 DEFINES       = -DQT_WEBKIT -DQT_NO_DEBUG -DQT_GUI_LIB -DQT_CORE_LIB -DQT_SHARED
-CFLAGS        = -pipe -std=c++0x -O2 -D_REENTRANT $(DEFINES)
-CXXFLAGS      = -pipe -std=c++0x -O2 -D_REENTRANT $(DEFINES)
+CFLAGS        = -pipe -std=c++0x -O2 -D_REENTRANT $(DEFINES) -Wno-unused-result
+CXXFLAGS      = -pipe -std=c++0x -O2 -D_REENTRANT $(DEFINES) -Wno-unused-result
 INCPATH       = -I/usr/share/qt4/mkspecs/linux-g++ -I. -I/usr/include/qt4/QtCore -I/usr/include/qt4/QtGui -I/usr/include/qt4 -I. -Icore -Igui -Imain -I.
 LINK          = g++
 LFLAGS        = -Wl,-O1
