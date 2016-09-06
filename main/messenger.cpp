@@ -8,10 +8,10 @@
 #include <cassert>
 #include <iostream>
 
-messenger::messenger(const std::string& i)
+messenger::messenger()
 {
     m_log_in_window = new log_in_window();
-    m_dispatcher = new dispatcher(i);
+    m_dispatcher = new dispatcher();
     connect(m_log_in_window, SIGNAL(login(const QString&, const QString&)),
             this, SLOT(login(const QString&, const QString&)), Qt::QueuedConnection);
     connect(m_log_in_window, SIGNAL(registration(const QString&, const QString&)),
