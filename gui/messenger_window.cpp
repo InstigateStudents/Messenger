@@ -1,6 +1,6 @@
 #include "messenger_window.h"
 
-#include <QDialog>
+#include <QWidget>
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QTextEdit>
@@ -21,7 +21,7 @@
 #include <cassert>
 
 messenger_window::messenger_window(const QStringList& l)
-    : QDialog()
+    : QWidget()
 {
 	m_current_user = 0;
 	m_user_count = l.count();

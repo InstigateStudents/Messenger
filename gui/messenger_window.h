@@ -1,7 +1,7 @@
 #ifndef MESSENGER_WINDOW_H
 #define MESSENGER_WINDOW_H
 
-#include <QDialog>
+#include <QWidget>
 #include <QStringList>
 #include <QVector>
 
@@ -16,7 +16,7 @@ class QListWidget;
 class QListWidgetItem;
 class QStackedLayout;
 
-class messenger_window : public QDialog
+class messenger_window : public QWidget 
 {
 	Q_OBJECT
 
