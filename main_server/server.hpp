@@ -107,7 +107,7 @@ public:
 	 */
 	static void update_online_users(main_server*);
 	
-	static void remove_offline_user(main_server*,const std::string& IP);	
+	static void remove_offline_user(main_server*,const std::string&);	
 public:
 	/**
 	 * Constructor for main_server object. Reads the contents of a database and
