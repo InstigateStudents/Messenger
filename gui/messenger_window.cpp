@@ -23,6 +23,8 @@
 messenger_window::messenger_window(const QStringList& l)
     : QWidget()
 {
+	QIcon icon("./gui/icons/main_icon.png");
+	setWindowIcon(icon);
 	m_current_user = 0;
 	m_user_count = l.count();
 	m_user_name = l;

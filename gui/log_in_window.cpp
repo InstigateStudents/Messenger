@@ -16,6 +16,8 @@
 log_in_window::log_in_window(QWidget* p)
     : QDialog(p)
 {
+	QIcon icon("./gui/icons/main_icon.png");
+	setWindowIcon(icon);
 	create_username_layout();
 	create_passwd_layout();
 	create_button_layout();
