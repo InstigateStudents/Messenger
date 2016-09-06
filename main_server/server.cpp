@@ -1,211 +1,210 @@
 #include "server.hpp"
 
-//Constructor for class server. Fills the map with info from the database.
-Server::Server()
+#include <cassert>
+
+/// TODO This is temporary solution, shold be made parametric
+std::string g_path = "main_server/dtb";
+
+main_server::main_server()
 {
-	int a;
-	std::string line;
-	std::string username;
-	std::string password;
-	std::ifstream file ("../dtb/user_list.txt");
-	if (file.is_open()){
-		while (!file.eof()){
-			getline(file,line);
-			if(file.eof()){break;}
+	std::cout << "SERVER STARTED.." << std::endl;
+	signal(SIGPIPE, SIG_IGN); 
+	std::string l;
+	std::string u;
+	std::string p;
+	std::ifstream file(g_path + "/user_list.txt");
+	if (file.is_open()) {
+		while (!file.eof()) {
+			getline(file, l);
+			if (file.eof()){break;}
 			int j;
-			for(j = 0; line[j] != ' '; ++j){
-				username.insert(j, 1, line[j]);
+			for (j = 0; l[j] != ' '; ++j){
+				u.insert(j, 1, l[j]);
 			}
 			j++;
-			for(int k = j; line[j] != '\0'; ++j){
-				password.insert(j - k, 1, line[j]);
+			for (int k = j; l[j] != '\0'; ++j){
+				p.insert(j - k, 1, l[j]);
 			}
-			m_users[username].m_pswd = password;
-			m_users[username].IP = "*";
-			std::cout << username << ' ' << password << std::endl;	
-			username = "";
-			password = "";
+			m_users[u].m_password = p;
+			m_users[u].m_ip = "*";
+			u = "";
+			p = "";
 		}      
+		file.close();
+		run();
+	} else {
+		std::cerr << "Unable to read the database" << std::endl;
+		exit(1);
 	}
-	file.close();
-	run();
 }
 
-std::string Server::parse(std::map<std::string, user_info> mp)
+std::string main_server::parse(std::map<std::string, user_info> mp)
 {
-	std::string result;
-	for(std::map<std::string, user_info>::iterator it = mp.begin(); it != mp.end(); ++it) {
-		if(it->second.IP != "*") {
-			result += (it->second.IP + ";");
-			result += (it->first + "\n");
+	std::string r;
+	for (std::map<std::string, user_info>::iterator it = mp.begin(); it != mp.end(); ++it){
+		if (it->second.m_ip != "*"){
+			r += (it->second.m_ip + ";");
+			r += (it->first + "\n");
 		}
 	}
-	return result;
+	return r;
 }
 
-
-
-//Checks if the given password is correct, and stores the IP address. 
-bool Server::user_login (Server* server, std::string usr, std::string pswd, std::string IP)
+bool main_server::user_login (main_server* server, const std::string user, const std::string password, const std::string IP)
 {
-	std::cout << "Login " << usr << " " << pswd << std::endl;
-	if ((server->m_users[usr].IP != "*")||(server->m_users[usr].m_pswd != pswd)) {
+	std::cout << "User:" << user << " is logging in "  << std::endl;
+	if (server->m_users.count(user) == 0){
 		return false;
 	}
-	server->m_users[usr].IP = IP;
-	return true;
-}
-//Deletes the user's IP and marks him as offline.
-void Server::user_logout (Server* server, std::string usr, std::string pswd)
-{
-	std::cout << "Logout " << usr << " " << pswd << std::endl;
-	server->m_users[usr].IP = "*";
-}
-//Creates a new record in the database with the given username and password.
-bool Server::user_register (Server* server, std::string usr, std::string pswd)
-{
-	std::cout << "Register " << usr << " " << pswd << std::endl;
-	if(server->m_users.count(usr) == 1){
+	if ((server->m_users[user].m_ip != "*")||(server->m_users[user].m_password != password)){
 		return false;
 	}
-	server->m_users[usr].m_pswd = pswd;
-	server->m_users[usr].IP = "*";
+	server->m_users[user].m_ip = IP;
 	return true;
 }
 
-//Updates the database according to the map.
-void Server::update_file(Server* server)
+void main_server::user_logout (main_server* server, const std::string user)
 {
-	while (true) {
-		FILE * filename = fopen("../dtb/user_list.txt","w");
-        std::map<std::string, user_info>::iterator it = server->m_users.begin();
-        for (; it != server->m_users.end(); ++it){
-            std::string usr = it->first;
-            fputs((usr + ' ' + server->m_users[usr].m_pswd + "\n").c_str(),
-                    filename);
-        }
+	std::cout << "User: " << user << " is logging out " << std::endl;
+	server->m_users[user].m_ip = "*";
+}
+
+bool main_server::user_register (main_server* server, const std::string user, const std::string password)
+{
+	std::cout << "User " << user << " successfully registred " << std::endl;
+	if (server->m_users.count(user) == 1){
+		return false;
+	}
+	server->m_users[user].m_password = password;
+	server->m_users[user].m_ip = "*";
+	return true;
+}
+
+void main_server::update_file(main_server* server)
+{
+	while (true){
+		std::string p = g_path + "/user_list.txt";
+		FILE * filename = fopen(p.c_str() ,"w");
+			for (std::map<std::string, user_info>::iterator it = server->m_users.begin(); it != server->m_users.end(); ++it){
+				std::string u = it->first;
+				fputs ((u + ' ' + server->m_users[u].m_password + "\n").c_str(), filename);
+			}
 		fclose(filename);
 		sleep(1);
 	}
 }
 
-//List of all online users.
-void Server::update_online_file(Server* s)
+void main_server::update_online_users(main_server* s)
 {
-	while(true) {
-		FILE * filename = fopen("../dtb/online_user_list.txt","w");
-        std::map<std::string, user_info>::iterator it = s->m_users.begin();
-        for (; it != s->m_users.end(); ++it){
-            std::string usr = it->first;
-            if(s->m_users[usr].IP != "*") {
-                fputs ((usr + ' ' + s->m_users[usr].IP + "\n").c_str(), filename);
-            }
-        }
+	while (true) {
+		std::string p = g_path + "/online_user_list.txt";
+		FILE* filename = fopen(p.c_str(), "w");
+			for (std::map<std::string, user_info>::iterator it = s->m_users.begin(); it != s->m_users.end(); ++it){
+				std::string u = it->first;
+				if (s->m_users[u].m_ip != "*") {
+					fputs ((u + ' ' + s->m_users[u].m_ip + "\n").c_str(), filename);
+				}
+			}
 		fclose(filename);
-		// parser function that returns string
-		std::string r = s->parse(s->m_users);
-		std::cout << r << std::endl;
-		send_to(s,r);
-		sleep(5);
+		sleep(1);
 	}
 }
 
-void Server::send_to(Server* s,std::string r)
+void main_server::send_to(int m, const std::string& r)
 {
-	int s_master_socket;
-	s_master_socket = socket(AF_INET, SOCK_STREAM,0);
-	sockaddr_in pair_addr;
-        char buf[1024];
+	char buf[1024];
 	strcpy(buf,r.c_str()); //incorrect =
-	bzero((sockaddr*)&pair_addr, sizeof(pair_addr));
-	pair_addr.sin_family = AF_INET;
-	pair_addr.sin_port = htons(12345);
-	for (std::map<std::string,user_info>::iterator it = s->m_users.begin();it != s->m_users.end(); ++it) {
-		 bzero((sockaddr*)&pair_addr, sizeof(pair_addr));
-		 std::string usr = it->first;
-		 if (s->m_users[usr].IP != "*"){
-	 		pair_addr.sin_addr.s_addr = std::stoi(s->m_users[usr].IP);
-         		if(connect(s_master_socket, (sockaddr *)&pair_addr, sizeof(pair_addr)) < 0) {
-	 			std::cerr << "Error in connection" << std::endl;
-	 		}
-	 	 	else {
-					if(write(s_master_socket, buf, strlen(buf)) < 0 ) {
-            					std::cerr << "Error in writing" << std::endl;
-        				}
-    			}
-		}
-	
+	if (write(m, buf, strlen(buf)) < 0 ){
+            	std::cerr << "Error in writing" << std::endl;
+    }
+	else{
+		bzero(buf,strlen(buf));
 	}
 }
-//Does the communications with the client, and waits for commands.
-void Server::run()
+
+void main_server::run()
 {
 	m_master_socket = socket(AF_INET, SOCK_STREAM, 0);
-	std::thread(Server::update_file,this).detach();
-	std::thread(Server::update_online_file,this).detach();
-	int newsocket;
+	std::thread(main_server::update_file,this).detach();
+	std::thread(main_server::update_online_users,this).detach();
+	int n;
 	sockaddr_in serv_addr, client_addr;
 	socklen_t clientlength;
 	bzero((sockaddr *)&serv_addr, sizeof(serv_addr));
 	serv_addr.sin_family = AF_INET;
 	serv_addr.sin_port = htons(12345);
 	serv_addr.sin_addr.s_addr = INADDR_ANY;
-	if(bind(m_master_socket,(sockaddr *)&serv_addr, sizeof(serv_addr)) < 0) {
+	if (bind(m_master_socket,(sockaddr *)&serv_addr, sizeof(serv_addr)) < 0) {
 		std::cerr << "Error in binding" << std::endl;
 	}
 	listen(m_master_socket,10);
 	clientlength = sizeof(client_addr);
-	while(true) {
+	while (true){
 		bzero((sockaddr *)&client_addr, clientlength);
-		newsocket = accept(m_master_socket,(sockaddr *)&client_addr, &clientlength);
-        std::cout << client_addr.sin_addr.s_addr << std::endl;
-		if(!newsocket) {
+		n = accept(m_master_socket,(sockaddr *)&client_addr, &clientlength);
+		if (!n){
 			std::cerr << "Error in accepting" << std::endl;
 		}
 		else {
 			std::string IP = std::to_string(client_addr.sin_addr.s_addr);
-			std::thread(Server::recieve_command, this, newsocket, IP).detach();
+			std::thread(main_server::recieve_command, this, n, IP).detach();
 		}
 	}
 }
 
-//Parses the given command and calls the appropriate function.
-void Server::recieve_command(Server* server, int socket, std::string IP)
+
+void main_server::recieve_command(main_server* server, int socket, const std::string IP)
 {
-	while(true) {
-		char buf[256];
+	char buf[256];
+	while (true) {
 		bzero(buf,sizeof(buf));
-		if(read(socket, buf, 256) < 0) {
-			std::cerr << "Error in reading" << std::endl;
+		if (read(socket, buf, 256) <= 0){
+			remove_offline_user(server,IP);
+			return;
 		}
-		std::cout << "after read" <<std::endl;
 		std::string s = std::string(buf);
-		std::cout << s << std::endl;
-		std::string command, username, password;
-		int command_end = s.find('?');
-		command.insert(0, s, 0, command_end);
-		std::cout << command << "\n";
-		if(command == "login" || command == "registration") {
-			std::cout << "break" << std::endl;
-			int username_end = s.find(';');
-			username.insert(0, s, command_end+1, username_end-command_end-1);
-			std::cout << username << "\n";
-			password.insert(0, s, username_end+1, s.size()-username_end-1);
-			if(command == "login") {
-				user_login(server, username, password, IP);
+		std::string c, u, p;
+		int ce = s.find('?');
+		c.insert(0, s, 0, ce);
+		if (c == "login" || c == "registration" || c == "update"){
+			int ue = s.find(';');
+			u.insert(0, s, ce+1, ue-ce-1);
+			p.insert(0, s, ue+1, s.size()-ue-1);
+			if (c == "login"){
+				if (user_login(server, u, p, IP)){
+					write(socket,"YES",strlen("YES"));
+				} else{
+					write(socket,"NO",strlen("NO"));
+				}
+			} else if (c == "registration") {
+				if (user_register(server, u, p)) {
+					write(socket,"YES",strlen("YES"));
+				} else {
+					write(socket,"NO",strlen("NO"));
+				}
+			} else if (c == "update") {
+				std::string r = server->parse(server->m_users);
+				send_to(socket,r);
 			}
-			else {	
-				user_register(server, username, password);
-			}
-		}
-		else if(command == "logout") {
-			username.insert(0, s, command_end+1, s.size()-command_end-1);
-			std::cout << username << "\n";
-			user_logout (server, username, password);
-		}
-		else {
-			std::cout << "wrong command\n";
-
+		} else if (c == "logout") {
+			u.insert(0, s, ce + 1, s.size() - ce - 1);
+			user_logout (server, u);
+			write(socket,"YES",strlen("YES"));
+		} else {
+			write(socket,"NO",strlen("NO"));	
 		}
 	}
 }
+
+void main_server::remove_offline_user(main_server* s, const std::string& p)
+{
+	assert(0 != s);
+	assert(!p.empty());
+	user_name_to_info::iterator i = s->m_users.begin();
+	for (; i != s->m_users.end(); ++i) {
+		if (i->second.m_ip == p) {
+			i->second.m_ip = "*";
+		}
+	}
+}
+

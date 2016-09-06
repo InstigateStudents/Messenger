@@ -3,10 +3,9 @@
 
 #include <string>
 
-struct user_info
-{
-	std::string m_pswd;
-	std::string IP;
+struct user_info {
+	std::string m_password;
+	std::string m_ip;
 	user_info();
 };
 

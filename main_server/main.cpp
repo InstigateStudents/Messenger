@@ -5,8 +5,8 @@
 
 int main()
 {
-	Server s;
-	while(true);
+	main_server s;
+	while (true);
 	return 0;
 }
 

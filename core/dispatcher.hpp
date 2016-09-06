@@ -49,7 +49,9 @@ public:
     users get_registered_users();
 public:
     // constructor takes in argument ip of main_server,and starting main_client
-    dispatcher(const std::string& m_server_ip);
+    dispatcher();
+    //read main server IP form congif file
+    std::string read_main_server_ip();
     //destructor
     ~dispatcher();
 };
