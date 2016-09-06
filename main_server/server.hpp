@@ -56,7 +56,7 @@ public:
 	 * @param The password.
 	 * @param The address from which the command was sent.
 	 */
-	static bool user_login(main_server*, const std::string, const std::string, const std::string);
+	static bool user_login(main_server*, const std::string&, const std::string&, const std::string&);
 
 	/**
 	 * Marks the user as offline and deletes the person's address from the map.
@@ -64,7 +64,7 @@ public:
 	 * @param The username of the person wishing to logout.
 	 * @param His password.
 	 */
-	static void user_logout(main_server*, const std::string);
+	static void user_logout(main_server*, const std::string&);
 
 	/**
 	 * Checks if the username is taken and creates a new record of a person
@@ -83,14 +83,14 @@ public:
 	 * @param Client's socket.
 	 * @param IP address of the client.
 	 */
-	static void recieve_command(main_server*, int, const std::string);
+	static void recieve_command(main_server*, int, const std::string&);
 
 	/**
 	 * Turns a map of users into a string of online users and their addresses
 	 * that can be transfered to the client.
 	 * @param The original map
 	 */
-	std::string parse(user_name_to_info mp);
+	std::string parse(user_name_to_info);
 
 	/**
 	 * Updates the database every 5 seconds
@@ -107,7 +107,7 @@ public:
 	 */
 	static void update_online_users(main_server*);
 	
-	static void remove_offline_user(main_server*,const std::string& IP);	
+	static void remove_offline_user(main_server*,const std::string&);	
 public:
 	/**
 	 * Constructor for main_server object. Reads the contents of a database and

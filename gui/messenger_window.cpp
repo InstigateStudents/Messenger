@@ -1,6 +1,6 @@
 #include "messenger_window.h"
 
-#include <QDialog>
+#include <QWidget>
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QTextEdit>
@@ -21,7 +21,7 @@
 #include <cassert>
 
 messenger_window::messenger_window(const QStringList& l)
-    : QDialog()
+    : QWidget()
 {
 	m_current_user = 0;
 	m_user_count = l.count();
@@ -71,7 +71,7 @@ void messenger_window::create_left_left_layout()
 void messenger_window::create_left_right_layout()
 {
     m_left_right_layout = new QVBoxLayout;
-    m_send_button = new QPushButton("Send");
+    m_send_button = new QPushButton();
 	QIcon icon("./gui/icons/send.png");
 	m_send_button->setIconSize(QSize(20,30));
 	m_send_button->setIcon(icon);
@@ -95,7 +95,7 @@ void messenger_window::create_right_side()
 	m_right_widget = new QWidget;
 	m_right_layout = new QVBoxLayout;
 	QLabel *ob = new QLabel("<h2><i>ONLINE USERS</i></h2>");
-	m_logout = new QPushButton("log out");
+	m_logout = new QPushButton();
 	QIcon icon("./gui/icons/logout.png");
 	m_logout->setIcon(icon);
 	QHBoxLayout* t = new QHBoxLayout;
@@ -123,9 +123,13 @@ void messenger_window::create_right_side()
 void messenger_window::send_message()
 {
 	if ( !(m_message_text->toPlainText().isEmpty()) ) {
-		QString msg = "->\n"+m_message_text->toPlainText()+"\n";
-		m_user_text_edit[m_current_user]->setTextColor(QColor(0,0,0));
+		QString msg = "From me:";//+m_message_text->toPlainText()+"\n";
+		m_user_text_edit[m_current_user]->setTextColor(QColor(255,0,0));
 		m_user_text_edit[m_current_user]->append(msg);
+
+		msg = m_message_text->toPlainText();
+		m_user_text_edit[m_current_user]->setTextColor(QColor(0,0,0));
+		m_user_text_edit[m_current_user]->append(msg+"\n");
 		//emit
 		QString to(m_user_name[m_current_user]);
 		QString m(m_message_text->toPlainText());
@@ -137,8 +141,12 @@ void messenger_window::send_message()
 void messenger_window::receive_message(const QString& f, const QString& m)
 {
 	int index = m_user_name.indexOf(f);
-	m_user_text_edit[index]->setTextColor(QColor(139,0,0));
-	m_user_text_edit[index]->append("<-\n" + m + "\n");
+	m_user_text_edit[index]->setTextColor(QColor(255,0,0));
+	std::string s = f.toStdString();
+	m_user_text_edit[index]->append("From "+QString::fromStdString(s.substr(0,s.size()-1))+":");
+
+	m_user_text_edit[index]->setTextColor(QColor(0,0,0));
+	m_user_text_edit[index]->append(m);
 	if (m_current_user != index) {
 		m_list_widget_item[index]->setTextColor(QColor(255,0,0));
 	}

@@ -103,9 +103,10 @@ void log_in_window::show_registration_result(const QString& s)
 
 void log_in_window::create_button_layout()
 {
-	m_reg_button = new QPushButton("Registration");
+	m_reg_button = new QPushButton("Register");
 	m_reg_button->setEnabled(false);
 	m_login_button = new QPushButton("LogIn");
+	m_login_button->setDefault(true);
 	m_login_button->setEnabled(false);
 	m_butt_layout = new QHBoxLayout;
 	m_butt_layout->addWidget(m_reg_button);
