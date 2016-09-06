@@ -47,9 +47,8 @@ public:
      * @brief Constructor
      * 
      * @details Sets up the connection with dispatcher
-     * @param i - IP of the main server
      */
-	messenger(const std::string& i);
+	messenger();
 };
 
 #endif // MESSENGER_H

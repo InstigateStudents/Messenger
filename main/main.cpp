@@ -5,7 +5,7 @@
 int main(int argc, char *argv[])
 {
 	QApplication a(argc, argv);
-	messenger m("192.168.68.131");
+	messenger m;
 	m.run();
 	return a.exec();
 }
