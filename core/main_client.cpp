@@ -11,7 +11,7 @@ main_client::main_client(const std::string& s_i)
     if (m_me.current_socket < 0) {
         throw std::runtime_error("Error in creating socket");
     }
-    std::thread(connect_server, m_me.current_socket, s_i).join();
+    std::thread(connect_server, std::ref(m_me.current_socket), std::ref(s_i)).join();
 }
 
 void main_client::connect_server(int& socket,const std::string& serv_ip)

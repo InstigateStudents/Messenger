@@ -9,7 +9,7 @@ client::client(const std::string& u_n)
     if (pair.current_socket < 0) {
         throw std::runtime_error("Error in creating socket");
     }
-    std::thread(start_communication, pair).join();
+    std::thread(start_communication, std::ref(pair)).join();
 }
 
 void client::start_communication(user& p)

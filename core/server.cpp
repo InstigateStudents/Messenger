@@ -43,7 +43,7 @@ void server::start_server(server* s)
         current_user.username = get_username_by_ip(u_ip); 
         current_user.current_ip =u_ip;
         current_user.current_socket = newsocket;
-        std::thread(read_message, s, current_user).detach();
+        std::thread(read_message, std::ref(s), std::ref(current_user)).detach();
     }
 }
 
